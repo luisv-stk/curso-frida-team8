@@ -8,6 +8,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class AppComponent {
+export class HeaderComponent {
   username: string = 'Francisco Perera';
 }

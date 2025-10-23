@@ -19,7 +19,7 @@ interface Product {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class AppComponent {
+export class TableComponent {
   productos: Product[] = Array(10).fill({
     referencia: '123-ABCDR',
     nombre: 'Bonito del norte',
