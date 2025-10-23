@@ -48,13 +48,43 @@
         <id>7</id>
         <name>Add header features and interactions</name>
         <description>Implement additional functionality such as dropdown menus, search bar, user profile dropdown, mobile menu toggle, and breadcrumbs.</description>
-        <completed>false</completed>
+        <completed>true</completed>
       </subtask>
       <subtask>
         <id>8</id>
         <name>Style and enhance header user experience</name>
         <description>Apply styling, add animations, hover effects, responsive design, accessibility features, and ensure consistent theming.</description>
-        <completed>false</completed>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+
+  <task>
+    <task_name>Generate Additional Components</task_name>
+    <subtasks>
+      <subtask>
+        <id>9</id>
+        <name>Create header-menu component structure</name>
+        <description>Generate the basic file structure for the header-menu component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>10</id>
+        <name>Create side-menu component structure</name>
+        <description>Generate the basic file structure for the side-menu component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>11</id>
+        <name>Create tabs component structure</name>
+        <description>Generate the basic file structure for the tabs component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>12</id>
+        <name>Create cart component structure</name>
+        <description>Generate the basic file structure for the cart component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
       </subtask>
     </subtasks>
   </task>
