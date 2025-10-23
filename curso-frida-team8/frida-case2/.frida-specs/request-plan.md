@@ -104,6 +104,48 @@
         <description>Generate the basic file structure for the image-uploader component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
         <completed>true</completed>
       </subtask>
+      <subtask>
+        <id>16</id>
+        <name>Create notification component structure</name>
+        <description>Generate the basic file structure for the notification component including TypeScript, HTML, CSS, and spec files with proper Angular component boilerplate.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+
+  <task>
+    <task_name>Fix Angular Application Errors</task_name>
+    <subtasks>
+      <subtask>
+        <id>17</id>
+        <name>Fix mat-icon import error in cart component</name>
+        <description>Add the necessary Angular Material icon imports to the cart component to resolve the mat-icon unknown element error.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>18</id>
+        <name>Fix MatMenuTrigger import error in header-menu component</name>
+        <description>Correct the import path for MatMenuTrigger from Angular Material and ensure proper module imports.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>19</id>
+        <name>Fix template file path error in header-menu component</name>
+        <description>Correct the templateUrl path in header-menu component from './app.component.html' to './header-menu.component.html'.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>20</id>
+        <name>Resolve remaining Angular Material and component errors</name>
+        <description>Fix any additional Angular Material import issues, verify template file paths are correct across all components, and ensure all required modules are properly imported to resolve compilation errors.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>21</id>
+        <name>Fix mat-icon error in cart component</name>
+        <description>Resolve the NG8001 error for mat-icon not being a known element by adding MatIconModule to the cart component imports or configuring proper schemas.</description>
+        <completed>false</completed>
+      </subtask>
     </subtasks>
   </task>
 </tasks>

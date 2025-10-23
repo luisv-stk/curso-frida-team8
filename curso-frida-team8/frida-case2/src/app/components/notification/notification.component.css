@@ -1,0 +1,18 @@
+.upload-notification {
+  display: flex;
+  align-items: center;
+  border: 1px solid #387d29;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+.success-icon {
+  color: #387d29;
+  margin-right: 10px;
+}
+
+.upload-text {
+  color: #387d29;
+  font-size: 16px;
+}

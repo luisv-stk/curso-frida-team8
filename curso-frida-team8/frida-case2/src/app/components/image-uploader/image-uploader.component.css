@@ -1,0 +1,78 @@
+:root {
+  --bg-light: #f1f1ee;
+  --text-success: #5daa4c;
+  --btn-secondary: #d9d9d9;
+  --dash-border-color: #5daa4c;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.upload-area {
+  background-color: var(--bg-light);
+}
+
+.dashed-border {
+  border: 2px dashed var(--dash-border-color);
+}
+
+.upload-icon {
+  background-color: rgba(93, 170, 76, 0.1);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+
+
+
+.container-fluid {
+  background-color: #f1f1ee;
+}
+.card {
+  background-color: #ffffff;
+}
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+
+.bg-light-gray {
+  background-color: #f1f1ee;
+}
+.text-success {
+  color: #5daa4c;
+}
+.text-secondary {
+  color: #131313;
+}
+.btn-outline-success {
+  border-color: #5daa4c;
+  color: #5daa4c;
+}
+.btn-outline-success:hover {
+  background-color: #5daa4c;
+  color: #ffffff;
+}

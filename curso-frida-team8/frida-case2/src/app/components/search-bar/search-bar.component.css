@@ -1,0 +1,23 @@
+.header {
+  background-color: #000000;
+  padding: 10px 20px;
+}
+
+.logo img {
+  height: 60px;
+}
+
+.search-bar {
+  gap: 10px;
+}
+
+.form-select,
+.form-control {
+  background-color: #ffffff;
+  color: #1e1e1e;
+}
+
+.material-icons {
+  font-size: 24px;
+  color: #d9d9d9;
+}

@@ -1,0 +1,15 @@
+<div class="header d-flex align-items-center justify-content-between">
+  <div class="logo">
+    <img src="https://placehold.co/200x60/jpg" alt="Logo">
+  </div>
+  <div class="search-bar d-flex align-items-center">
+  <!--  ESTE SELECT NO SE MUESTRA EN TODAS LAS PANTALLAS --> 
+    <select class="form-select" [(ngModel)]="selectedCategory">
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+    <input type="text" class="form-control" placeholder="Buscar producto" [(ngModel)]="searchText">
+    <button class="btn" (click)="search()">
+      <i class="material-icons">search</i>
+    </button>
+  </div>
+</div>

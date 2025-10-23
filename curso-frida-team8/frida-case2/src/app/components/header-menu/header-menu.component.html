@@ -1,0 +1,14 @@
+<div class="toolbar">
+  <div class="language-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      Español <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>English</button>
+      <button mat-menu-item>Français</button>
+    </mat-menu>
+  </div>
+  <span>Ayuda</span>
+  <button mat-stroked-button>Cerrar sesión</button>
+  <button mat-raised-button color="primary">Gestión de tienda</button>
+</div>
