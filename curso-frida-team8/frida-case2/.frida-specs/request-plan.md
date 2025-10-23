@@ -86,6 +86,24 @@
         <description>Generate the basic file structure for the cart component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
         <completed>true</completed>
       </subtask>
+      <subtask>
+        <id>13</id>
+        <name>Create search-bar component structure</name>
+        <description>Generate the basic file structure for the search-bar component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>14</id>
+        <name>Create card component structure</name>
+        <description>Generate the basic file structure for the card component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>15</id>
+        <name>Create image-uploader component structure</name>
+        <description>Generate the basic file structure for the image-uploader component including TypeScript, HTML, CSS, and spec files with empty boilerplate code.</description>
+        <completed>true</completed>
+      </subtask>
     </subtasks>
   </task>
 </tasks>
