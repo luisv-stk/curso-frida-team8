@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SearchBarComponent } from '../search-bar/search-bar.component'; 
 
 interface Product {
   referencia: string;
@@ -15,7 +16,7 @@ interface Product {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SearchBarComponent],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })

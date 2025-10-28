@@ -146,6 +146,12 @@
         <description>Resolve the NG8001 error for mat-icon not being a known element by adding MatIconModule to the cart component imports or configuring proper schemas.</description>
         <completed>true</completed>
       </subtask>
+      <subtask>
+        <id>32</id>
+        <name>Fix TabsComponent standalone error</name>
+        <description>Resolve the NG6008 error where TabsComponent is standalone and cannot be declared in NgModule. Either remove standalone: true from TabsComponent or move it from declarations to imports array in app.module.ts.</description>
+        <completed>true</completed>
+      </subtask>
     </subtasks>
   </task>
 
@@ -162,6 +168,66 @@
         <id>23</id>
         <name>Generate personal-area-page component</name>
         <description>Create the personal-area-page component within the pages directory with complete Angular component structure including TypeScript, HTML, CSS, and spec files.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+
+  <task>
+    <task_name>Implement Angular Routing</task_name>
+    <subtasks>
+      <subtask>
+        <id>24</id>
+        <name>Configure Angular Router module</name>
+        <description>Set up Angular Router in the app module, configure routing module imports, and establish the basic routing infrastructure.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>25</id>
+        <name>Define route configuration</name>
+        <description>Create route definitions for all pages including personal-area-page and any other existing pages, with proper path mapping and component associations.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>26</id>
+        <name>Update app.component for routing</name>
+        <description>Modify the app.component template to include router-outlet and update the component structure to support routing navigation.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>27</id>
+        <name>Add navigation functionality</name>
+        <description>Implement navigation links or menu items that utilize Angular Router for navigation between pages, ensuring proper routing behavior.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+
+  <task>
+    <task_name>Create Angular Module System</task_name>
+    <subtasks>
+      <subtask>
+        <id>28</id>
+        <name>Create app.module.ts file</name>
+        <description>Generate the main Angular module (app.module.ts) with proper NgModule configuration including imports, declarations, providers, and bootstrap sections.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>29</id>
+        <name>Configure module imports and dependencies</name>
+        <description>Set up all necessary Angular and third-party module imports including BrowserModule, RouterModule, Angular Material modules, and any other required dependencies.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>30</id>
+        <name>Register all components in module declarations</name>
+        <description>Add all existing components (table, header, pages, and other components) to the declarations array of the app module to make them available throughout the application.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>31</id>
+        <name>Update main.ts for module bootstrapping</name>
+        <description>Modify the main.ts file to bootstrap the application using the new app.module instead of standalone components, ensuring proper Angular module initialization.</description>
         <completed>true</completed>
       </subtask>
     </subtasks>
