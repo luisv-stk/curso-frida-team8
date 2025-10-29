@@ -1,0 +1,120 @@
+<!-- Modal backdrop and container -->
+<div class="modal-backdrop" *ngIf="isVisible" (click)="onCancel()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Producto</h5>
+        <button type="button" class="btn-close" (click)="onCancel()" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <!-- Referencia -->
+          <div class="mb-3">
+            <label for="referencia" class="form-label">Referencia*</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="referencia" 
+                   [(ngModel)]="editingProduct.referencia"
+                   name="referencia"
+                   required
+                   readonly>
+            <small class="text-muted">La referencia no se puede modificar</small>
+          </div>
+
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre*</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="nombre" 
+                   [(ngModel)]="editingProduct.nombre"
+                   name="nombre"
+                   required
+                   placeholder="Nombre del producto">
+          </div>
+
+          <!-- Marca -->
+          <div class="mb-3">
+            <label for="marca" class="form-label">Marca*</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="marca" 
+                   [(ngModel)]="editingProduct.marca"
+                   name="marca"
+                   required
+                   placeholder="Marca del producto">
+          </div>
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción*</label>
+            <textarea class="form-control" 
+                      id="descripcion" 
+                      rows="3"
+                      [(ngModel)]="editingProduct.descripcion"
+                      name="descripcion"
+                      required
+                      placeholder="Descripción del producto"></textarea>
+          </div>
+
+          <!-- Precio -->
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio*</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="precio" 
+                   [(ngModel)]="editingProduct.precio"
+                   name="precio"
+                   required
+                   placeholder="Ej: 12,99">
+            <small class="text-muted">Formato: XX,XX (usar coma como separador decimal)</small>
+          </div>
+
+          <!-- Disponible -->
+          <div class="mb-3">
+            <label for="disponible" class="form-label">Cantidad Disponible*</label>
+            <input type="number" 
+                   class="form-control" 
+                   id="disponible" 
+                   [(ngModel)]="editingProduct.disponible"
+                   name="disponible"
+                   required
+                   min="0"
+                   placeholder="0">
+          </div>
+
+          <!-- Departamento -->
+          <div class="mb-3">
+            <label for="departamento" class="form-label">Departamento*</label>
+            <select class="form-control" 
+                    id="departamento" 
+                    [(ngModel)]="editingProduct.departamento"
+                    name="departamento"
+                    required>
+              <option value="">Seleccionar departamento...</option>
+              <option *ngFor="let dept of departamentos" [value]="dept">{{ dept }}</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button type="button" 
+                class="btn btn-success" 
+                (click)="onSave()"
+                [disabled]="isFormInvalid">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,124 @@
-.table th, .table td {
+/* Success Notification */
+.success-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1060;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification-content {
+  background-color: #d1edff;
+  border: 1px solid #28a745;
+  border-radius: 8px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  color: #155724;
+  font-weight: 500;
+  max-width: 350px;
+  word-wrap: break-word;
+}
+
+.notification-content i {
+  font-size: 20px;
+  color: #28a745;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Table styling enhancements */
+.table {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2e3d3c;
+  border-bottom: 2px solid #dee2e6;
+  padding: 12px;
+}
+
+.table td {
+  padding: 12px;
   vertical-align: middle;
 }
 
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Action icons styling */
 .material-icons {
-  vertical-align: middle;
-  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.material-icons:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .success-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .notification-content {
+    max-width: none;
+  }
+  
+  .table-responsive {
+    font-size: 14px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+  }
+}
+
+/* Loading and empty states */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #dee2e6;
+}
+
+/* Filter badge styling */
+.bg-light.text-muted {
+  background-color: #e9ecef !important;
+  color: #6c757d !important;
+  font-size: 0.875rem;
+}
+
+/* Header styling */
+h4 {
+  color: #2e3d3c;
+  font-weight: 600;
+  margin-bottom: 16px;
 }

@@ -1,0 +1,32 @@
+<!-- Confirmation Dialog Modal -->
+<div class="modal-backdrop" *ngIf="isVisible" (click)="onCancel()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="material-icons me-2" [class]="iconColor">{{ iconName }}</i>
+          {{ title }}
+        </h5>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p class="mb-0">{{ message }}</p>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          {{ cancelText }}
+        </button>
+        <button type="button" 
+                class="btn"
+                [class]="confirmButtonClass" 
+                (click)="onConfirm()">
+          {{ confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

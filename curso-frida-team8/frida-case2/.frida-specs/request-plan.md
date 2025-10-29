@@ -58,4 +58,64 @@
       </subtask>
     </subtasks>
   </task>
+
+  <task>
+    <task_name>Implement Functional Search Bar with Filtering</task_name>
+    <subtasks>
+      <subtask>
+        <id>9</id>
+        <name>Analyze existing search-bar component structure</name>
+        <description>Examine the current search-bar component to understand its current implementation, identify the search input field and dropdown elements, and determine what table data needs to be filtered.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>10</id>
+        <name>Implement search functionality logic</name>
+        <description>Add reactive form controls, search term handling, and filtering logic to the search-bar component that can filter table data based on user input in real-time.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>11</id>
+        <name>Connect dropdown filter options</name>
+        <description>Make the dropdown functional by implementing category/type filtering that works in combination with the text search to provide comprehensive table filtering capabilities.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>12</id>
+        <name>Integrate search bar with table component</name>
+        <description>Connect the search-bar component with the table that displays the data, ensuring that filter changes immediately update the visible table rows and provide smooth user experience.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+
+  <task>
+    <task_name>Add Edit and Delete Functionality to Table Component</task_name>
+    <subtasks>
+      <subtask>
+        <id>13</id>
+        <name>Implement edit button functionality</name>
+        <description>Add click handlers for the edit button that opens a modal or navigates to an edit form, allowing users to modify product information with proper validation and data binding.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>14</id>
+        <name>Implement delete button functionality</name>
+        <description>Add click handlers for the delete button that shows a confirmation dialog and removes the product from the table and underlying data source with proper error handling.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>15</id>
+        <name>Create edit modal or form component</name>
+        <description>Build the edit interface (modal dialog or separate component) with form controls for all product properties, validation rules, and save/cancel functionality.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>16</id>
+        <name>Add confirmation dialogs and user feedback</name>
+        <description>Implement confirmation dialogs for delete operations, success/error notifications for edit operations, and proper user feedback throughout the editing process.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
 </tasks>

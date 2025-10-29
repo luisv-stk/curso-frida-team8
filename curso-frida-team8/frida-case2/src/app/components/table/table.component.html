@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-12 pt-3">
       <h4>Productos en tienda</h4>
-      <span class="px-2 py-1 rounded bg-light text-muted">22.456 productos cargados</span>
+      <span class="px-2 py-1 rounded bg-light text-muted">{{ totalProductos }} productos {{ currentFilter.searchText || currentFilter.category !== 'Todos' ? 'encontrados' : 'cargados' }}</span>
       <div class="float-end">
-        <app-search-bar></app-search-bar>
+        <app-search-bar (searchChanged)="onSearchChanged($event)"></app-search-bar>
       </div>
     </div>
     <div class="col-12 mt-3">
@@ -31,12 +31,40 @@
             <td>{{ producto.disponible }}</td>
             <td>{{ producto.departamento }}</td>
             <td>
-              <i class="material-icons text-success" style="cursor: pointer;">edit</i>
-              <i class="material-icons text-success" style="cursor: pointer;">delete</i>
+              <i class="material-icons text-success me-2" style="cursor: pointer;" (click)="editProduct(producto)">edit</i>
+              <i class="material-icons text-danger" style="cursor: pointer;" (click)="deleteProduct(producto)">delete</i>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+<app-edit-product-modal 
+  [product]="productToEdit"
+  [isVisible]="isEditModalVisible"
+  (save)="onSaveProduct($event)"
+  (cancel)="onCancelEdit()">
+</app-edit-product-modal>
+
+<!-- Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="isConfirmDialogVisible"
+  [title]="confirmDialogData?.title || ''"
+  [message]="confirmDialogData?.message || ''"
+  [type]="confirmDialogData?.type || 'warning'"
+  confirmText="Eliminar"
+  cancelText="Cancelar"
+  (confirm)="onConfirmDialog()"
+  (cancel)="onCancelDialog()">
+</app-confirmation-dialog>
+
+<!-- Success Notification -->
+<div *ngIf="showSuccessNotification" class="success-notification">
+  <div class="notification-content">
+    <i class="material-icons text-success me-2">check_circle</i>
+    {{ successMessage }}
   </div>
 </div>

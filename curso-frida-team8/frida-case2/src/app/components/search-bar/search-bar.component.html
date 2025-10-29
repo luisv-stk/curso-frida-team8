@@ -1,10 +1,10 @@
 <div class="header d-flex align-items-center justify-content-between">
   <div class="search-bar d-flex align-items-center">
   <!--  ESTE SELECT NO SE MUESTRA EN TODAS LAS PANTALLAS --> 
-    <select class="form-select" [(ngModel)]="selectedCategory">
+    <select class="form-select" [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange()">
       <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
     </select>
-    <input type="text" class="form-control" placeholder="Buscar producto" [(ngModel)]="searchText">
+    <input type="text" class="form-control" placeholder="Buscar producto" [(ngModel)]="searchText" (input)="onSearchTextChange()">
     <button class="btn" (click)="search()">
       <i class="material-icons">search</i>
     </button>

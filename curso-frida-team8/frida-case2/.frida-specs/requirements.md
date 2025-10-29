@@ -1,146 +1,236 @@
 # Requirements Specification
 
 ## 1. Overview
-This project involves adding a new navigation button called "Gestión de Tienda" (Store Management) to the existing home page of an Angular web application. The button will provide users with direct access to the store product management functionality by redirecting them to the manage-product page.
+
+This project involves enhancing an existing Angular table component for product management by adding functional edit and delete capabilities to the action buttons. The current implementation displays a product table with search functionality but lacks operational CRUD capabilities for individual product entries.
+
+**Purpose**: Enable users to modify and remove products directly from the product table interface, providing a complete product management solution.
 
 ## 2. Functional Requirements
 
 ### 2.1 Core Functionality
-- **FR-001**: Add a "Gestión de Tienda" button to the home page component
-- **FR-002**: Implement click event handler for the button that triggers navigation
-- **FR-003**: Navigate to the manage-product page (/manage-product route) when button is clicked
-- **FR-004**: Maintain existing home page functionality and layout
-- **FR-005**: Ensure button is visible and accessible on page load
+
+**F-001: Edit Product Functionality**
+- The edit icon must trigger an edit mode or navigation to an edit form
+- Users must be able to modify all editable product fields (nombre, marca, descripción, precio, disponible, departamento)
+- The system must validate input data before saving changes
+- Changes must be persisted to the data source
+- The table must refresh to reflect updated data
+
+**F-002: Delete Product Functionality**
+- The delete icon must trigger a product removal process
+- The system must show a confirmation dialog before deletion
+- Upon confirmation, the product must be removed from the data source
+- The table must update immediately to reflect the deletion
+- The product count display must update accordingly
+
+**F-003: Data Integrity**
+- All operations must maintain data consistency
+- The system must handle concurrent access scenarios
+- Referential integrity must be preserved (if applicable)
 
 ### 2.2 User Interactions
-- **FR-006**: User can click the "Gestión de Tienda" button using mouse or keyboard
-- **FR-007**: Button provides visual feedback on hover and click states
-- **FR-008**: Navigation occurs immediately upon button click without page refresh (SPA behavior)
-- **FR-009**: User can navigate back to home page from manage-product page using browser back button
+
+**UI-001: Edit Interaction Flow**
+1. User clicks edit icon on a product row
+2. System presents edit interface (modal, inline edit, or navigation)
+3. User modifies desired fields
+4. User saves or cancels changes
+5. System validates and processes the request
+6. Interface updates to reflect changes or shows error messages
+
+**UI-002: Delete Interaction Flow**
+1. User clicks delete icon on a product row
+2. System displays confirmation dialog with product details
+3. User confirms or cancels deletion
+4. If confirmed, system removes product and updates display
+5. System shows success/failure feedback
 
 ### 2.3 Data Management
-- **FR-010**: No additional data storage requirements for this feature
-- **FR-011**: Navigation state is managed by Angular Router
-- **FR-012**: Current route information is updated in browser URL
+
+**DM-001: Product Model Operations**
+- CRUD operations must support the existing product model structure
+- Updates must preserve the `referencia` field as identifier
+- All numeric fields must maintain proper data types
+- String fields must handle encoding and length constraints
 
 ## 3. Non-Functional Requirements
 
 ### 3.1 Performance
-- Button click response time: < 100ms
-- Page navigation completion: < 500ms
-- Button rendering time: < 50ms on page load
-- No impact on existing home page load time
+
+**P-001: Response Times**
+- Edit operations must complete within 2 seconds
+- Delete operations must complete within 1 second
+- Table refresh must occur within 500ms after operation completion
+
+**P-002: Scalability**
+- System must handle tables with up to 1000+ products without performance degradation
+- Operations must not block the UI during processing
 
 ### 3.2 Security
-- Navigation uses Angular Router security mechanisms
-- No additional authentication required for button access
-- Route protection handled by existing route guards (if any)
-- XSS protection through Angular's built-in sanitization
+
+**S-001: Authorization**
+- Only authorized users can perform edit/delete operations
+- System must validate permissions before executing operations
+- Audit trail must be maintained for all modifications
+
+**S-002: Data Validation**
+- All input must be sanitized to prevent injection attacks
+- Price fields must accept only valid numeric values
+- Required fields must be validated on the client and server side
 
 ### 3.3 Usability
-- Button text in Spanish: "Gestión de Tienda"
-- Button follows existing application design system
-- Accessible via keyboard navigation (Tab key)
-- Screen reader compatible with appropriate ARIA labels
-- Compatible with major browsers (Chrome, Firefox, Safari, Edge)
-- Responsive design for mobile and desktop devices
+
+**U-001: User Experience**
+- Actions must provide immediate visual feedback
+- Error messages must be clear and actionable
+- Loading states must be indicated during operations
+- Keyboard navigation should be supported
+
+**U-002: Accessibility**
+- Icons must have appropriate ARIA labels
+- Color coding must not be the only indicator of status
+- Screen readers must be able to identify action buttons
 
 ### 3.4 Reliability
-- Button functionality works consistently across page refreshes
-- Navigation works regardless of how user arrived at home page
-- Graceful handling if manage-product page is unavailable
-- No JavaScript errors during navigation process
+
+**R-001: Error Handling**
+- Network failures must be gracefully handled
+- Users must be notified of operation failures
+- Failed operations must not corrupt the data display
+- System must provide retry mechanisms for failed operations
 
 ## 4. User Stories
 
-1. **As a store administrator**, I want to see a "Gestión de Tienda" button on the home page so that I can quickly access the product management functionality.
+**US-001**: As a store manager, I want to edit product information directly from the product table so that I can quickly update details without navigating to separate pages.
 
-2. **As a user on the home page**, I want to click the "Gestión de Tienda" button so that I can navigate to the manage-product page without typing the URL.
+**US-002**: As a store manager, I want to delete obsolete products from the table so that I can maintain an accurate inventory list.
 
-3. **As a mobile user**, I want the "Gestión de Tienda" button to be easily tappable on my device so that I can access store management features on the go.
+**US-003**: As a store manager, I want to see confirmation before deleting a product so that I can prevent accidental removals.
 
-4. **As a keyboard user**, I want to be able to navigate to and activate the "Gestión de Tienda" button using only my keyboard so that I can access the functionality without a mouse.
+**US-004**: As a store manager, I want immediate feedback when I perform edit or delete operations so that I know the actions were successful.
 
-5. **As a screen reader user**, I want the "Gestión de Tienda" button to be properly announced so that I understand its purpose and can interact with it.
+**US-005**: As a store manager, I want the product count to update automatically after deletions so that I have accurate inventory numbers.
+
+**US-006**: As a system administrator, I want all edit and delete operations to be logged so that I can audit changes to the product database.
+
+**US-007**: As a store employee, I want clear error messages when operations fail so that I can understand what went wrong and how to fix it.
 
 ## 5. Constraints and Assumptions
 
 ### 5.1 Technical Constraints
-- Must use Angular Router for navigation
-- Must integrate with existing HomePageComponent
-- Cannot modify existing route configuration (routes already defined)
-- Must follow Angular component lifecycle patterns
-- Must use TypeScript for implementation
+
+**TC-001: Framework Limitations**
+- Must be implemented using Angular framework
+- Must maintain compatibility with existing component structure
+- Must use Bootstrap CSS framework for styling consistency
+
+**TC-002: Integration Requirements**
+- Must integrate with existing search and filter functionality
+- Must work with current data service architecture
+- Must maintain existing table performance characteristics
 
 ### 5.2 Business Constraints
-- Button text must be in Spanish
-- Must maintain existing home page functionality
-- No budget for external dependencies
-- Implementation should be completed in minimal development time
+
+**BC-001: Development Timeline**
+- Implementation must be completed within existing sprint cycles
+- No breaking changes to existing functionality allowed
+- Must maintain backward compatibility
+
+**BC-002: Resource Limitations**
+- Implementation must use existing development team
+- No additional third-party libraries without approval
+- Must work within current infrastructure constraints
 
 ### 5.3 Assumptions
-- Angular Router is properly configured and functional
-- ManageProductPage component exists and is working
-- Home page component is accessible and modifiable
-- Users have appropriate permissions to access manage-product page
-- Existing CSS/styling framework is available for button styling
+
+**A-001: Data Service Availability**
+- Backend API endpoints for edit/delete operations exist or will be provided
+- Data service supports the required CRUD operations
+- Network connectivity is available for API calls
+
+**A-002: User Environment**
+- Users have modern browsers supporting ES6+ features
+- Material Icons font is available and loaded
+- Bootstrap CSS framework is properly configured
 
 ## 6. Acceptance Criteria
 
-| Requirement ID | Acceptance Criteria | Priority |
-|---------------|-------------------|----------|
-| AC-001 | Button with text "Gestión de Tienda" is visible on home page | Must Have |
-| AC-002 | Clicking button navigates to /manage-product route | Must Have |
-| AC-003 | Navigation updates browser URL to show /manage-product | Must Have |
-| AC-004 | Button is keyboard accessible (focusable and activatable) | Must Have |
-| AC-005 | Button follows existing application styling patterns | Should Have |
-| AC-006 | Button provides hover and focus visual feedback | Should Have |
-| AC-007 | Button is responsive on mobile devices | Should Have |
-| AC-008 | Navigation works without JavaScript errors | Must Have |
-| AC-009 | Browser back button returns user to home page | Should Have |
-| AC-010 | Screen readers can identify and interact with button | Could Have |
+### 6.1 Edit Functionality Success Criteria
 
-## 7. Out of Scope
+✅ **AC-E001**: Edit icon displays tooltip "Editar producto" on hover  
+✅ **AC-E002**: Clicking edit icon opens edit interface within 500ms  
+✅ **AC-E003**: All product fields except 'referencia' are editable  
+✅ **AC-E004**: Form validation prevents invalid data submission  
+✅ **AC-E005**: Successful edits update the table row immediately  
+✅ **AC-E006**: Edit operation shows success/failure message  
 
-- **Authentication or authorization for accessing manage-product page**
-- **Modifications to the manage-product page itself**
-- **Changes to existing navigation menu or header**
-- **Addition of icons or complex visual elements to the button**
-- **Integration with external analytics or tracking systems**
-- **Internationalization (i18n) beyond Spanish text**
-- **Advanced animations or transitions during navigation**
-- **Breadcrumb navigation implementation**
-- **User role-based button visibility**
-- **Loading states or progress indicators during navigation**
+### 6.2 Delete Functionality Success Criteria
 
-## 8. Implementation Notes
+✅ **AC-D001**: Delete icon displays tooltip "Eliminar producto" on hover  
+✅ **AC-D002**: Clicking delete icon shows confirmation dialog  
+✅ **AC-D003**: Confirmation dialog displays product name and reference  
+✅ **AC-D004**: Canceling deletion leaves table unchanged  
+✅ **AC-D005**: Confirming deletion removes row from table immediately  
+✅ **AC-D006**: Product count updates correctly after deletion  
+✅ **AC-D007**: Delete operation shows success/failure message  
 
-### 8.1 Technical Implementation
+### 6.3 General Success Criteria
+
+✅ **AC-G001**: No existing functionality is broken or degraded  
+✅ **AC-G002**: Search and filter continue to work with modified data  
+✅ **AC-G003**: All operations work consistently across different browsers  
+✅ **AC-G004**: Performance remains acceptable with large product lists  
+
+## 7. Implementation Requirements
+
+### 7.1 Component Updates Required
+
+**Component Files to Modify:**
+- `table.component.html` - Add click handlers and accessibility attributes
+- `table.component.ts` - Implement edit/delete methods and event handling
+- `table.component.css` - Add any required styling for edit/delete states
+
+### 7.2 Method Signatures
+
 ```typescript
-// Expected button implementation in home-page.component.ts
-navigateToManageProduct(): void {
-  this.router.navigate(['/manage-product']);
-}
+// Required methods in table.component.ts
+onEditProduct(producto: Producto): void
+onDeleteProduct(producto: Producto): void
+confirmDelete(producto: Producto): void
 ```
+
+### 7.3 Event Handling
 
 ```html
-<!-- Expected HTML in home-page.component.html -->
-<button 
-  type="button" 
-  (click)="navigateToManageProduct()"
-  class="btn-manage-store"
-  aria-label="Ir a gestión de tienda">
-  Gestión de Tienda
-</button>
+<!-- Updated HTML structure -->
+<i class="material-icons text-success" 
+   style="cursor: pointer;"
+   (click)="onEditProduct(producto)"
+   title="Editar producto"
+   [attr.aria-label]="'Editar producto ' + producto.nombre">
+   edit
+</i>
+<i class="material-icons text-danger ms-2" 
+   style="cursor: pointer;"
+   (click)="onDeleteProduct(producto)"
+   title="Eliminar producto"
+   [attr.aria-label]="'Eliminar producto ' + producto.nombre">
+   delete
+</i>
 ```
 
-### 8.2 Dependencies
-- Angular Router service must be injected into HomePageComponent
-- No additional npm packages required
-- Existing route configuration supports this feature
+## 8. Out of Scope
 
-### 8.3 Testing Requirements
-- Unit test for button click event handler
-- Integration test for navigation functionality
-- E2E test for complete user journey
-- Accessibility testing for keyboard and screen reader support
+**OS-001**: Bulk edit/delete operations are not included in this implementation  
+**OS-002**: Advanced permission management beyond basic authorization  
+**OS-003**: Product creation functionality (separate from edit/delete)  
+**OS-004**: Import/export functionality  
+**OS-005**: Advanced audit logging beyond basic operation tracking  
+**OS-006**: Offline capability for edit/delete operations  
+**OS-007**: Real-time collaboration features  
+**OS-008**: Mobile-specific optimizations beyond responsive design  
+
+---
+
+**Priority Classification**: All requirements marked as **Must Have** for core functionality, with accessibility and performance features as **Should Have**.
