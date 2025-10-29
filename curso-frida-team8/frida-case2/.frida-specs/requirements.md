@@ -2,234 +2,138 @@
 
 ## 1. Overview
 
-This project involves resolving an Angular compilation error related to a standalone component (`TabsComponent`) that is incorrectly declared in an NgModule. The goal is to provide a comprehensive solution that addresses the immediate error while establishing best practices for Angular component architecture in a mixed standalone/module-based application.
+This project involves resolving an image loading issue in an Angular e-commerce application where the logo.png file is not displaying correctly in the cart component's navigation header. The application appears to be a supermarket shopping cart system with product management capabilities.
 
 ## 2. Functional Requirements
 
 ### 2.1 Core Functionality
-
-**REQ-FUNC-001**: Error Resolution
-- The system must successfully compile without the NG6008 error
-- All existing functionality must remain intact after the fix
-- The application must maintain its current routing and component structure
-
-**REQ-FUNC-002**: Component Architecture Management
-- Support both standalone and NgModule-declared components within the same application
-- Provide clear separation between standalone and module-based components
-- Maintain backward compatibility with existing NgModule structure
-
-**REQ-FUNC-003**: Import/Export Management
-- Correctly import standalone components where needed
-- Remove inappropriate declarations from NgModule
-- Ensure proper component availability across the application
+- **REQ-F001**: The application must display a company logo image in the navigation header
+- **REQ-F002**: The navigation must show the company name "MI COMPRA" and subtitle "SUPERMERCADO"
+- **REQ-F003**: The navigation must provide menu items for different sections (Item1-4)
+- **REQ-F004**: The system must include an "Añadir producto" (Add Product) button with navigation functionality
+- **REQ-F005**: The cart component must render a responsive navigation bar
 
 ### 2.2 User Interactions
-
-**REQ-FUNC-004**: Component Functionality Preservation
-- All existing component interactions must continue to work as expected
-- User interface elements must render correctly
-- Component communication patterns must remain functional
+- **REQ-F006**: Users must be able to click the "Añadir producto" button to navigate to product management
+- **REQ-F007**: Users must be able to view and access navigation menu items
+- **REQ-F008**: The logo must be clickable for potential homepage navigation (if implemented)
 
 ### 2.3 Data Management
-
-**REQ-FUNC-005**: Component State Management
-- Preserve existing component state management approaches
-- Ensure data flow between components remains unaffected
-- Maintain any existing dependency injection patterns
+- **REQ-F009**: The system must correctly resolve and serve static image assets
+- **REQ-F010**: Image paths must be properly configured relative to the application's asset structure
 
 ## 3. Non-Functional Requirements
 
 ### 3.1 Performance
-
-**REQ-PERF-001**: Compilation Time
-- Build time must not increase significantly (< 10% increase acceptable)
-- Hot reload functionality must remain responsive
-- Bundle size should not increase due to architectural changes
-
-**REQ-PERF-002**: Runtime Performance
-- Application startup time must remain consistent
-- Component rendering performance must not degrade
-- Memory usage should not increase due to import changes
+- Logo image must load within 2 seconds on standard broadband connections
+- Image file size should be optimized (< 100KB for web display)
+- Navigation rendering must complete within 500ms
 
 ### 3.2 Security
-
-**REQ-SEC-001**: Component Isolation
-- Standalone components must maintain appropriate encapsulation
-- No unintended component access should be introduced
-- Security boundaries between components must be preserved
+- Image assets must be served through secure protocols (HTTPS in production)
+- File access must follow proper web security practices
+- No sensitive information should be exposed in asset paths
 
 ### 3.3 Usability
-
-**REQ-USAB-001**: Developer Experience
-- Code should be self-documenting regarding component types
-- Clear distinction between standalone and module components
-- Consistent import patterns across the application
-
-**REQ-USAB-002**: Maintainability
-- Solution must be easily maintainable by other developers
-- Clear documentation of architectural decisions
-- Consistent with Angular best practices
+- Logo must be clearly visible and maintain brand consistency
+- Navigation must be responsive across desktop and mobile devices
+- Alternative text must be provided for accessibility compliance
+- Visual hierarchy must clearly distinguish between logo, company name, and navigation items
 
 ### 3.4 Reliability
-
-**REQ-REL-001**: Build Stability
-- Solution must compile successfully across different environments
-- No breaking changes to existing functionality
-- Robust error handling for component loading failures
+- Fallback mechanism must be in place if logo fails to load
+- Application must gracefully handle missing image assets
+- Error handling should not break the overall navigation layout
 
 ## 4. User Stories
 
-**US-001**: As a developer, I want the application to compile successfully so that I can continue development without errors.
+**US-001**: As a customer, I want to see the company logo clearly displayed so that I can identify the brand and feel confident about the shopping experience.
 
-**US-002**: As a developer, I want clear guidance on component architecture so that I can make informed decisions about standalone vs module components.
+**US-002**: As a customer, I want to access different sections of the application through navigation menu items so that I can browse products efficiently.
 
-**US-003**: As a developer, I want consistent import patterns so that I can easily understand and maintain the codebase.
+**US-003**: As a store administrator, I want to click the "Add Product" button so that I can manage inventory and add new items to the catalog.
 
-**US-004**: As a build engineer, I want the compilation process to be reliable so that CI/CD pipelines run smoothly.
+**US-004**: As a user with visual impairments, I want proper alt text for the logo so that screen readers can announce the company name.
 
-**US-005**: As a team lead, I want architectural consistency so that team members can work efficiently across different parts of the application.
+**US-005**: As a mobile user, I want the navigation to be responsive so that I can use the application on any device.
 
-**US-006**: As an end user, I want the application to function identically so that my workflow is not disrupted by technical changes.
+**US-006**: As a developer, I want proper asset path configuration so that images load correctly in all environments (development, staging, production).
 
 ## 5. Constraints and Assumptions
 
 ### 5.1 Technical Constraints
-
-**CON-TECH-001**: Angular Framework Version
-- Must work with the current Angular version in use
-- Solution must be compatible with Angular's compilation pipeline
-- No major framework upgrades required
-
-**CON-TECH-002**: Existing Codebase
-- Cannot break existing component functionality
-- Must maintain current routing structure
-- Should minimize changes to other files
-
-**CON-TECH-003**: Build Tools
-- Must work with existing build configuration
-- Compatible with current bundling strategy
-- No additional build tool dependencies
+- Must use Angular framework and Angular Material components
+- Must maintain Bootstrap CSS framework for styling
+- Logo image must be in PNG format
+- Must be compatible with modern web browsers (Chrome 90+, Firefox 88+, Safari 14+)
 
 ### 5.2 Business Constraints
-
-**CON-BUS-001**: Timeline
-- Fix must be implemented immediately to unblock development
-- Minimal testing time required for simple architectural change
-- No extended development cycles for this issue
-
-**CON-BUS-002**: Risk Management
-- Solution must have minimal risk of introducing new issues
-- Rollback strategy must be simple and quick
-- No impact on production deployment schedules
+- Logo must maintain existing brand guidelines and design
+- Navigation structure must remain consistent with current layout
+- Changes must not affect other application components
 
 ### 5.3 Assumptions
-
-**ASM-001**: TabsComponent is confirmed to be a standalone component
-**ASM-002**: Other components in the declarations array are not standalone
-**ASM-003**: Current Angular CLI and TypeScript versions support mixed architecture
-**ASM-004**: No other components have similar declaration/import conflicts
+- The logo.png file exists but is not in the correct location
+- Angular CLI is being used for asset management
+- Bootstrap and Angular Material are properly configured
+- The application follows standard Angular project structure
 
 ## 6. Acceptance Criteria
 
-### 6.1 Primary Success Criteria
+| Requirement | Success Criteria |
+|-------------|-----------------|
+| Logo Display | ✓ Logo image renders correctly in navigation header |
+| Image Loading | ✓ Logo loads within 2 seconds on first page visit |
+| Responsiveness | ✓ Navigation layout adapts properly on screen sizes 320px-1920px |
+| Accessibility | ✓ Logo has appropriate alt text and meets WCAG 2.1 AA standards |
+| Cross-browser | ✓ Logo displays consistently across Chrome, Firefox, Safari, Edge |
+| Error Handling | ✓ Graceful degradation when image fails to load |
+| Asset Management | ✓ Image path resolves correctly in all deployment environments |
 
-**AC-001**: **Compilation Success**
-- ✅ Application compiles without NG6008 error
-- ✅ No new compilation errors introduced
-- ✅ Build completes successfully in development and production modes
+## 7. Technical Implementation Requirements
 
-**AC-002**: **Functionality Preservation**
-- ✅ All existing components render correctly
-- ✅ Component interactions work as before
-- ✅ Application routing functions properly
-- ✅ All pages load without errors
+### 7.1 Asset Configuration
+- **REQ-T001**: Logo.png must be placed in `src/assets/images/` directory
+- **REQ-T002**: Image path in HTML must be updated to `assets/images/logo.png`
+- **REQ-T003**: Angular.json must include proper asset configuration
+- **REQ-T004**: Image optimization must be applied (compression, proper format)
 
-**AC-003**: **Code Quality**
-- ✅ Import statements follow Angular best practices
-- ✅ No unused imports remain in the module
-- ✅ TypeScript compilation succeeds without warnings
-
-### 6.2 Secondary Success Criteria
-
-**AC-004**: **Documentation**
-- ✅ Clear comments explaining standalone component handling
-- ✅ Updated import patterns documented
-- ✅ Architecture decisions recorded
-
-**AC-005**: **Testing**
-- ✅ Existing unit tests continue to pass
-- ✅ Integration tests remain functional
-- ✅ Manual smoke testing confirms UI functionality
-
-## 7. Implementation Approach
-
-### 7.1 Immediate Fix (Priority: Critical)
-
-1. **Remove TabsComponent from declarations array** in `app.module.ts`
-2. **Add TabsComponent to imports array** if needed by other components in the module
-3. **Verify component is properly exported** from its source file
-4. **Test compilation** to ensure error resolution
-
-### 7.2 Code Example
-
-```typescript
-@NgModule({
-  declarations: [
-    App,
-    PersonalAreaPage,
-    CardComponent,
-    CartComponent,
-    HeaderComponent,
-    HeaderMenuComponent,
-    ImageUploaderComponent,
-    NotificationComponent,
-    SearchBarComponent,
-    SideMenuComponent,
-    TableComponent
-    // TabsComponent removed from declarations
-  ],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(routes),
-    BrowserAnimationsModule,
-    TabsComponent // Added to imports if needed
-  ],
-  // ... rest of module configuration
-})
-```
-
-### 7.3 Validation Steps
-
-| Step | Action | Expected Result |
-|------|--------|----------------|
-| 1 | Run `ng build` | No NG6008 error |
-| 2 | Run `ng serve` | Application starts successfully |
-| 3 | Navigate to pages using TabsComponent | Component renders correctly |
-| 4 | Test component functionality | All features work as expected |
+### 7.2 Code Standards
+- **REQ-T005**: HTML must include proper alt attribute for accessibility
+- **REQ-T006**: CSS classes must follow existing naming conventions
+- **REQ-T007**: Component must handle image loading states appropriately
 
 ## 8. Out of Scope
 
-**OOS-001**: Converting other components to standalone architecture
-**OOS-002**: Comprehensive application architecture refactoring
-**OOS-003**: Performance optimization beyond error resolution
-**OOS-004**: Adding new features or functionality
-**OOS-005**: Updating Angular framework version
-**OOS-006**: Modifying component internal logic or styling
-**OOS-007**: Changing routing configuration
-**OOS-008**: Updating build or deployment processes
+The following items are explicitly **NOT** included in this requirements specification:
 
-## 9. Risk Assessment
+- Complete redesign of the navigation component
+- Implementation of navigation menu item functionality (Item1-4)
+- Backend API development for product management
+- User authentication and authorization systems
+- Shopping cart functionality beyond the display component
+- Payment processing integration
+- Multi-language support
+- Advanced image optimization workflows
+- Logo design or brand guideline creation
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Breaking other components | Low | High | Thorough testing of all components |
-| Build configuration issues | Low | Medium | Maintain current build setup |
-| Runtime errors | Low | High | Comprehensive smoke testing |
-| Team confusion about architecture | Medium | Low | Clear documentation and communication |
+## 9. Definition of Done
 
-## 10. Success Metrics
+The logo loading issue will be considered resolved when:
 
-- **Compilation Time**: Build completes within current baseline ±5%
-- **Error Count**: Zero compilation errors related to component declarations
-- **Functionality**: 100% of existing features continue to work
-- **Team Velocity**: No development delays due to build issues
+1. ✅ Logo.png displays correctly in the cart component navigation
+2. ✅ Image loads consistently across all supported browsers
+3. ✅ No console errors related to image loading
+4. ✅ Application passes accessibility audit for image elements
+5. ✅ Responsive behavior is maintained on all screen sizes
+6. ✅ Code follows project standards and is properly documented
+7. ✅ Solution is tested in development, staging, and production environments
+
+## 10. Priority Classification (MoSCoW)
+
+| Priority | Requirements |
+|----------|-------------|
+| **Must Have** | Logo image display, proper asset path configuration, basic accessibility |
+| **Should Have** | Responsive design, cross-browser compatibility, error handling |
+| **Could Have** | Image optimization, loading states, click functionality |
+| **Won't Have** | Logo redesign, navigation restructuring, backend changes |

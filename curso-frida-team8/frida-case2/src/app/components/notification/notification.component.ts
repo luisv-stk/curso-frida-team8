@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -10,5 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './notification.component.css'
 })
 export class NotificationComponent {
-
+  @Input() message: string = 'El archivo se ha cargado correctamente';
+  @Input() fileName: string = '';
+  @Input() fileSize: string = '';
 }
