@@ -1,139 +1,146 @@
 # Requirements Specification
 
 ## 1. Overview
-
-This project involves resolving an image loading issue in an Angular e-commerce application where the logo.png file is not displaying correctly in the cart component's navigation header. The application appears to be a supermarket shopping cart system with product management capabilities.
+This project involves adding a new navigation button called "Gestión de Tienda" (Store Management) to the existing home page of an Angular web application. The button will provide users with direct access to the store product management functionality by redirecting them to the manage-product page.
 
 ## 2. Functional Requirements
 
 ### 2.1 Core Functionality
-- **REQ-F001**: The application must display a company logo image in the navigation header
-- **REQ-F002**: The navigation must show the company name "MI COMPRA" and subtitle "SUPERMERCADO"
-- **REQ-F003**: The navigation must provide menu items for different sections (Item1-4)
-- **REQ-F004**: The system must include an "Añadir producto" (Add Product) button with navigation functionality
-- **REQ-F005**: The cart component must render a responsive navigation bar
+- **FR-001**: Add a "Gestión de Tienda" button to the home page component
+- **FR-002**: Implement click event handler for the button that triggers navigation
+- **FR-003**: Navigate to the manage-product page (/manage-product route) when button is clicked
+- **FR-004**: Maintain existing home page functionality and layout
+- **FR-005**: Ensure button is visible and accessible on page load
 
 ### 2.2 User Interactions
-- **REQ-F006**: Users must be able to click the "Añadir producto" button to navigate to product management
-- **REQ-F007**: Users must be able to view and access navigation menu items
-- **REQ-F008**: The logo must be clickable for potential homepage navigation (if implemented)
+- **FR-006**: User can click the "Gestión de Tienda" button using mouse or keyboard
+- **FR-007**: Button provides visual feedback on hover and click states
+- **FR-008**: Navigation occurs immediately upon button click without page refresh (SPA behavior)
+- **FR-009**: User can navigate back to home page from manage-product page using browser back button
 
 ### 2.3 Data Management
-- **REQ-F009**: The system must correctly resolve and serve static image assets
-- **REQ-F010**: Image paths must be properly configured relative to the application's asset structure
+- **FR-010**: No additional data storage requirements for this feature
+- **FR-011**: Navigation state is managed by Angular Router
+- **FR-012**: Current route information is updated in browser URL
 
 ## 3. Non-Functional Requirements
 
 ### 3.1 Performance
-- Logo image must load within 2 seconds on standard broadband connections
-- Image file size should be optimized (< 100KB for web display)
-- Navigation rendering must complete within 500ms
+- Button click response time: < 100ms
+- Page navigation completion: < 500ms
+- Button rendering time: < 50ms on page load
+- No impact on existing home page load time
 
 ### 3.2 Security
-- Image assets must be served through secure protocols (HTTPS in production)
-- File access must follow proper web security practices
-- No sensitive information should be exposed in asset paths
+- Navigation uses Angular Router security mechanisms
+- No additional authentication required for button access
+- Route protection handled by existing route guards (if any)
+- XSS protection through Angular's built-in sanitization
 
 ### 3.3 Usability
-- Logo must be clearly visible and maintain brand consistency
-- Navigation must be responsive across desktop and mobile devices
-- Alternative text must be provided for accessibility compliance
-- Visual hierarchy must clearly distinguish between logo, company name, and navigation items
+- Button text in Spanish: "Gestión de Tienda"
+- Button follows existing application design system
+- Accessible via keyboard navigation (Tab key)
+- Screen reader compatible with appropriate ARIA labels
+- Compatible with major browsers (Chrome, Firefox, Safari, Edge)
+- Responsive design for mobile and desktop devices
 
 ### 3.4 Reliability
-- Fallback mechanism must be in place if logo fails to load
-- Application must gracefully handle missing image assets
-- Error handling should not break the overall navigation layout
+- Button functionality works consistently across page refreshes
+- Navigation works regardless of how user arrived at home page
+- Graceful handling if manage-product page is unavailable
+- No JavaScript errors during navigation process
 
 ## 4. User Stories
 
-**US-001**: As a customer, I want to see the company logo clearly displayed so that I can identify the brand and feel confident about the shopping experience.
+1. **As a store administrator**, I want to see a "Gestión de Tienda" button on the home page so that I can quickly access the product management functionality.
 
-**US-002**: As a customer, I want to access different sections of the application through navigation menu items so that I can browse products efficiently.
+2. **As a user on the home page**, I want to click the "Gestión de Tienda" button so that I can navigate to the manage-product page without typing the URL.
 
-**US-003**: As a store administrator, I want to click the "Add Product" button so that I can manage inventory and add new items to the catalog.
+3. **As a mobile user**, I want the "Gestión de Tienda" button to be easily tappable on my device so that I can access store management features on the go.
 
-**US-004**: As a user with visual impairments, I want proper alt text for the logo so that screen readers can announce the company name.
+4. **As a keyboard user**, I want to be able to navigate to and activate the "Gestión de Tienda" button using only my keyboard so that I can access the functionality without a mouse.
 
-**US-005**: As a mobile user, I want the navigation to be responsive so that I can use the application on any device.
-
-**US-006**: As a developer, I want proper asset path configuration so that images load correctly in all environments (development, staging, production).
+5. **As a screen reader user**, I want the "Gestión de Tienda" button to be properly announced so that I understand its purpose and can interact with it.
 
 ## 5. Constraints and Assumptions
 
 ### 5.1 Technical Constraints
-- Must use Angular framework and Angular Material components
-- Must maintain Bootstrap CSS framework for styling
-- Logo image must be in PNG format
-- Must be compatible with modern web browsers (Chrome 90+, Firefox 88+, Safari 14+)
+- Must use Angular Router for navigation
+- Must integrate with existing HomePageComponent
+- Cannot modify existing route configuration (routes already defined)
+- Must follow Angular component lifecycle patterns
+- Must use TypeScript for implementation
 
 ### 5.2 Business Constraints
-- Logo must maintain existing brand guidelines and design
-- Navigation structure must remain consistent with current layout
-- Changes must not affect other application components
+- Button text must be in Spanish
+- Must maintain existing home page functionality
+- No budget for external dependencies
+- Implementation should be completed in minimal development time
 
 ### 5.3 Assumptions
-- The logo.png file exists but is not in the correct location
-- Angular CLI is being used for asset management
-- Bootstrap and Angular Material are properly configured
-- The application follows standard Angular project structure
+- Angular Router is properly configured and functional
+- ManageProductPage component exists and is working
+- Home page component is accessible and modifiable
+- Users have appropriate permissions to access manage-product page
+- Existing CSS/styling framework is available for button styling
 
 ## 6. Acceptance Criteria
 
-| Requirement | Success Criteria |
-|-------------|-----------------|
-| Logo Display | ✓ Logo image renders correctly in navigation header |
-| Image Loading | ✓ Logo loads within 2 seconds on first page visit |
-| Responsiveness | ✓ Navigation layout adapts properly on screen sizes 320px-1920px |
-| Accessibility | ✓ Logo has appropriate alt text and meets WCAG 2.1 AA standards |
-| Cross-browser | ✓ Logo displays consistently across Chrome, Firefox, Safari, Edge |
-| Error Handling | ✓ Graceful degradation when image fails to load |
-| Asset Management | ✓ Image path resolves correctly in all deployment environments |
+| Requirement ID | Acceptance Criteria | Priority |
+|---------------|-------------------|----------|
+| AC-001 | Button with text "Gestión de Tienda" is visible on home page | Must Have |
+| AC-002 | Clicking button navigates to /manage-product route | Must Have |
+| AC-003 | Navigation updates browser URL to show /manage-product | Must Have |
+| AC-004 | Button is keyboard accessible (focusable and activatable) | Must Have |
+| AC-005 | Button follows existing application styling patterns | Should Have |
+| AC-006 | Button provides hover and focus visual feedback | Should Have |
+| AC-007 | Button is responsive on mobile devices | Should Have |
+| AC-008 | Navigation works without JavaScript errors | Must Have |
+| AC-009 | Browser back button returns user to home page | Should Have |
+| AC-010 | Screen readers can identify and interact with button | Could Have |
 
-## 7. Technical Implementation Requirements
+## 7. Out of Scope
 
-### 7.1 Asset Configuration
-- **REQ-T001**: Logo.png must be placed in `src/assets/images/` directory
-- **REQ-T002**: Image path in HTML must be updated to `assets/images/logo.png`
-- **REQ-T003**: Angular.json must include proper asset configuration
-- **REQ-T004**: Image optimization must be applied (compression, proper format)
+- **Authentication or authorization for accessing manage-product page**
+- **Modifications to the manage-product page itself**
+- **Changes to existing navigation menu or header**
+- **Addition of icons or complex visual elements to the button**
+- **Integration with external analytics or tracking systems**
+- **Internationalization (i18n) beyond Spanish text**
+- **Advanced animations or transitions during navigation**
+- **Breadcrumb navigation implementation**
+- **User role-based button visibility**
+- **Loading states or progress indicators during navigation**
 
-### 7.2 Code Standards
-- **REQ-T005**: HTML must include proper alt attribute for accessibility
-- **REQ-T006**: CSS classes must follow existing naming conventions
-- **REQ-T007**: Component must handle image loading states appropriately
+## 8. Implementation Notes
 
-## 8. Out of Scope
+### 8.1 Technical Implementation
+```typescript
+// Expected button implementation in home-page.component.ts
+navigateToManageProduct(): void {
+  this.router.navigate(['/manage-product']);
+}
+```
 
-The following items are explicitly **NOT** included in this requirements specification:
+```html
+<!-- Expected HTML in home-page.component.html -->
+<button 
+  type="button" 
+  (click)="navigateToManageProduct()"
+  class="btn-manage-store"
+  aria-label="Ir a gestión de tienda">
+  Gestión de Tienda
+</button>
+```
 
-- Complete redesign of the navigation component
-- Implementation of navigation menu item functionality (Item1-4)
-- Backend API development for product management
-- User authentication and authorization systems
-- Shopping cart functionality beyond the display component
-- Payment processing integration
-- Multi-language support
-- Advanced image optimization workflows
-- Logo design or brand guideline creation
+### 8.2 Dependencies
+- Angular Router service must be injected into HomePageComponent
+- No additional npm packages required
+- Existing route configuration supports this feature
 
-## 9. Definition of Done
-
-The logo loading issue will be considered resolved when:
-
-1. ✅ Logo.png displays correctly in the cart component navigation
-2. ✅ Image loads consistently across all supported browsers
-3. ✅ No console errors related to image loading
-4. ✅ Application passes accessibility audit for image elements
-5. ✅ Responsive behavior is maintained on all screen sizes
-6. ✅ Code follows project standards and is properly documented
-7. ✅ Solution is tested in development, staging, and production environments
-
-## 10. Priority Classification (MoSCoW)
-
-| Priority | Requirements |
-|----------|-------------|
-| **Must Have** | Logo image display, proper asset path configuration, basic accessibility |
-| **Should Have** | Responsive design, cross-browser compatibility, error handling |
-| **Could Have** | Image optimization, loading states, click functionality |
-| **Won't Have** | Logo redesign, navigation restructuring, backend changes |
+### 8.3 Testing Requirements
+- Unit test for button click event handler
+- Integration test for navigation functionality
+- E2E test for complete user journey
+- Accessibility testing for keyboard and screen reader support

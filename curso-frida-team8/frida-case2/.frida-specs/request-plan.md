@@ -1,29 +1,59 @@
 <tasks>
   <task>
-    <task_name>Replace Current Logo with logo.png</task_name>
+    <task_name>Create Angular API Service for Image Analysis</task_name>
     <subtasks>
       <subtask>
         <id>1</id>
-        <name>Locate current logo implementation</name>
-        <description>Find where the current logo is displayed in the application, identify the current image file being used, and understand how it's referenced in the code.</description>
+        <name>Generate base API service structure</name>
+        <description>Create api.service.ts file with proper Angular service setup, including necessary imports, dependency injection for HttpClient, and configuration of the base URL pointing to the deployed backend at Railway.</description>
         <completed>true</completed>
       </subtask>
       <subtask>
         <id>2</id>
-        <name>Update logo reference to use logo.png</name>
-        <description>Replace the current logo image reference with logo.png in all relevant template files, ensuring the new logo displays correctly across all components where it appears.</description>
+        <name>Implement image analysis service method</name>
+        <description>Create analyzeImage method that accepts a File object, constructs FormData for multipart upload, and makes HTTP POST request to /api/image/analyze endpoint with proper headers and error handling.</description>
         <completed>true</completed>
       </subtask>
       <subtask>
         <id>3</id>
-        <name>Fix logo.png loading issue</name>
-        <description>Diagnose why logo.png is not loading - check if the file exists in the correct location (assets folder), verify the path is correct, and ensure proper Angular asset configuration.</description>
+        <name>Add TypeScript interfaces for API responses</name>
+        <description>Define TypeScript interfaces for the expected JSON response structure from the image analysis endpoint, including product type, weight, price, and other supermarket catalogue properties.</description>
         <completed>true</completed>
       </subtask>
       <subtask>
         <id>4</id>
-        <name>Implement proper asset path for logo</name>
-        <description>Update the image source to use the correct Angular asset path (typically assets/logo.png) and ensure the image loads properly in the application.</description>
+        <name>Configure service for dependency injection</name>
+        <description>Ensure the service is properly configured as an Injectable provider and can be imported and used throughout the Angular application components.</description>
+        <completed>true</completed>
+      </subtask>
+    </subtasks>
+  </task>
+  
+  <task>
+    <task_name>Create Home Page Component</task_name>
+    <subtasks>
+      <subtask>
+        <id>5</id>
+        <name>Generate home-page component structure</name>
+        <description>Create home-page component inside the pages folder with proper Angular component architecture including TypeScript class, HTML template, and CSS styling files.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>6</id>
+        <name>Design and implement home page layout</name>
+        <description>Create an attractive and functional home page layout with navigation, hero section, feature highlights, and call-to-action elements that showcase the image analysis functionality.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>7</id>
+        <name>Configure routing for home page</name>
+        <description>Set up Angular routing to make the home page accessible and ensure proper navigation integration with the existing application structure.</description>
+        <completed>true</completed>
+      </subtask>
+      <subtask>
+        <id>8</id>
+        <name>Add store management navigation button</name>
+        <description>Create a "Gestión de Tienda" button in the home page component that navigates to the manage-product page using Angular Router when clicked.</description>
         <completed>true</completed>
       </subtask>
     </subtasks>

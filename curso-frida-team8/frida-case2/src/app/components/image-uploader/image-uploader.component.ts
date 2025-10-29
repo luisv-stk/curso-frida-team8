@@ -130,6 +130,6 @@ export class ImageUploaderComponent implements OnDestroy {
       this.router.navigate(['/personal-area'], { 
         queryParams: { showNotification: 'true', message: 'Producto subido correctamente' }
       });
-    }, 10000); // 10 seconds (10000 ms)
+    }, 5000); // 10 seconds (10000 ms)
   }
 }

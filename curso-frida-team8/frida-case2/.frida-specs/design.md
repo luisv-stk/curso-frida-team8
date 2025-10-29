@@ -3,309 +3,319 @@
 ## 1. Architecture Overview
 
 ### 1.1 High-Level Architecture
-This system follows a **Single Page Application (SPA)** architecture using Angular framework with a component-based design pattern. The application appears to be a supermarket management system with shopping cart functionality. The architecture is structured as a client-side application with potential backend API integration for data persistence.
+This is an **Angular Single Page Application (SPA)** following a client-side routing architecture pattern. The system implements a modular component-based structure with dedicated pages for different business functionalities including home dashboard, personal area management, shopping cart, and product management.
 
 ### 1.2 Architecture Diagram
 ```mermaid
 graph TB
-    A[Angular Frontend] --> B[Component Layer]
-    B --> C[Cart Component]
-    B --> D[Product Management Component]
-    B --> E[Navigation Component]
+    A[Angular SPA] --> B[App Router]
+    B --> C[Home Page Component]
+    B --> D[Personal Area Page]
+    B --> E[Card Component]
+    B --> F[Manage Product Page]
     
-    A --> F[Service Layer]
-    F --> G[Cart Service]
-    F --> H[Product Service]
-    F --> I[Navigation Service]
+    C --> G[Store Management Button]
+    G --> F
     
-    A --> J[Assets Layer]
-    J --> K[Images - logo.png]
-    J --> L[Styles - CSS/SCSS]
+    H[Angular Services] --> C
+    H --> D
+    H --> E
+    H --> F
     
-    F --> M[Backend API]
-    M --> N[Product Endpoints]
-    M --> O[Cart Endpoints]
-    M --> P[User Management]
-    
-    M --> Q[Database]
-    Q --> R[Products Table]
-    Q --> S[Cart Items Table]
-    Q --> T[Users Table]
+    I[Backend API] --> H
+    J[Database] --> I
 ```
 
 ### 1.3 Technology Stack
-- **Frontend Framework**: Angular (with TypeScript)
-- **UI Components**: Angular Material
-- **Styling**: Bootstrap + Custom CSS/SCSS
-- **Icons**: Material Icons
-- **State Management**: RxJS/Angular Services
+- **Frontend Framework**: Angular 17+ (with standalone components)
+- **Routing**: Angular Router
+- **UI Framework**: Angular Material or Bootstrap (recommended)
+- **State Management**: Angular Services with RxJS
 - **HTTP Client**: Angular HttpClient
-- **Build Tool**: Angular CLI
-- **Package Manager**: npm/yarn
-
-**Backend (Recommended)**:
-- **Runtime**: Node.js with Express.js or NestJS
-- **Database**: PostgreSQL or MongoDB
-- **Authentication**: JWT tokens
-- **File Upload**: Multer or similar for image handling
+- **Build Tool**: Angular CLI with Webpack
+- **Package Manager**: npm or yarn
 
 ## 2. Component Design
 
 ### 2.1 Frontend Components
 
-#### Cart Component
+#### Home Page Component
 ```typescript
-// cart.component.ts
-export class CartComponent {
-  // Properties
-  cartItems: CartItem[] = [];
-  totalPrice: number = 0;
-  
-  // Methods
-  navigateToManageProduct(): void;
-  updateCartTotal(): void;
-  removeItem(itemId: string): void;
-}
+// Location: src/app/pages/home-page/home-page.ts
+@Component({
+  selector: 'app-home-page',
+  template: `
+    <div class="home-container">
+      <h1>Bienvenido</h1>
+      <div class="actions-panel">
+        <button 
+          class="btn btn-primary store-management-btn"
+          (click)="navigateToStoreManagement()">
+          Gestión de Tienda
+        </button>
+        <!-- Other home page content -->
+      </div>
+    </div>
+  `
+})
 ```
 
-#### Product Management Component
+**Responsibilities:**
+- Display main dashboard/welcome content
+- Provide navigation to key system areas
+- House the "Gestión de Tienda" button with navigation logic
+
+#### Manage Product Page Component
 ```typescript
-// product-management.component.ts
-export class ProductManagementComponent {
-  // Properties
-  products: Product[] = [];
-  selectedProduct: Product | null = null;
-  
-  // Methods
-  addProduct(product: Product): void;
-  editProduct(product: Product): void;
-  deleteProduct(productId: string): void;
-  uploadProductImage(file: File): void;
-}
+// Location: src/app/pages/manage-product-page/manage-product-page.ts
+@Component({
+  selector: 'app-manage-product-page',
+  template: `
+    <div class="product-management-container">
+      <h1>Gestión de Productos</h1>
+      <!-- Product management interface -->
+    </div>
+  `
+})
 ```
 
-#### Navigation Component
+**Responsibilities:**
+- Product CRUD operations interface
+- Product listing and filtering
+- Product form management
+
+### 2.2 Backend Services (Angular Services)
+
+#### Navigation Service
 ```typescript
-// navigation.component.ts
-export class NavigationComponent {
-  // Properties
-  logoPath: string = 'assets/images/logo.png';
-  navigationItems: NavigationItem[] = [];
+@Injectable({ providedIn: 'root' })
+export class NavigationService {
+  constructor(private router: Router) {}
   
-  // Methods
-  navigateToSection(section: string): void;
+  navigateToStoreManagement(): void {
+    this.router.navigate(['/manage-product']);
+  }
 }
 ```
-
-### 2.2 Backend Services
 
 #### Product Service
-- Handles CRUD operations for products
-- Manages product images and metadata
-- Implements search and filtering capabilities
+```typescript
+@Injectable({ providedIn: 'root' })
+export class ProductService {
+  private apiUrl = 'api/products';
+  
+  constructor(private http: HttpClient) {}
+  
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.apiUrl);
+  }
+  
+  createProduct(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, product);
+  }
+}
+```
 
-#### Cart Service
-- Manages shopping cart state
-- Handles cart persistence
-- Calculates totals and applies discounts
-
-#### File Upload Service
-- Handles image uploads for products and logos
-- Implements file validation and processing
-- Manages static asset serving
+### 2.3 Database Layer
+- **Pattern**: Repository pattern implemented through Angular Services
+- **HTTP Communication**: RESTful API calls using Angular HttpClient
+- **State Management**: Local component state with service-based data flow
 
 ## 3. Data Models
 
 ### 3.1 Database Schema
 
-```sql
--- Products Table
-CREATE TABLE products (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    image_url VARCHAR(500),
-    category_id UUID REFERENCES categories(id),
-    stock_quantity INTEGER DEFAULT 0,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+```typescript
+// Product Entity
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  imageUrl?: string;
+  stock: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
--- Categories Table
-CREATE TABLE categories (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+// User Entity (for personal area)
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
--- Cart Items Table
-CREATE TABLE cart_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id),
-    product_id UUID REFERENCES products(id),
-    quantity INTEGER NOT NULL DEFAULT 1,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+// Cart Item Entity
+interface CartItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  userId: string;
+  addedAt: Date;
+}
 
--- Users Table
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    role VARCHAR(50) DEFAULT 'customer',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- System Settings Table (for logo and configurations)
-CREATE TABLE system_settings (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    setting_key VARCHAR(100) UNIQUE NOT NULL,
-    setting_value TEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  MANAGER = 'manager'
+}
 ```
 
 ### 3.2 Data Flow
-1. **User Interaction** → Component → Service → HTTP Request → Backend API
-2. **Data Persistence** → Database → API Response → Service → Component → UI Update
-3. **Image Assets** → Static File Server → Angular Assets → Component Template
+1. **User Interaction** → Component methods
+2. **Component** → Service method calls
+3. **Service** → HTTP requests to backend API
+4. **Backend API** → Database operations
+5. **Response** flows back through the same chain with Observable patterns
 
 ## 4. API Design
 
 ### 4.1 Endpoints
 
-#### Product Management
-```http
+```typescript
+// Product Management Endpoints
 GET /api/products
-Response: { products: Product[], total: number, page: number }
+Response: Product[]
+Authentication: Bearer token
 
 POST /api/products
-Request: { name: string, description: string, price: number, categoryId: string, imageFile?: File }
-Response: { product: Product, message: string }
+Request: { name: string, description: string, price: number, category: string, stock: number }
+Response: Product
+Authentication: Bearer token (Admin/Manager only)
 
 PUT /api/products/:id
-Request: { name?: string, description?: string, price?: number, categoryId?: string }
-Response: { product: Product, message: string }
+Request: Partial<Product>
+Response: Product
+Authentication: Bearer token (Admin/Manager only)
 
 DELETE /api/products/:id
-Response: { message: string, success: boolean }
-```
+Response: { success: boolean }
+Authentication: Bearer token (Admin/Manager only)
 
-#### Cart Management
-```http
+// User Management Endpoints
+GET /api/users/profile
+Response: User
+Authentication: Bearer token
+
+PUT /api/users/profile
+Request: Partial<User>
+Response: User
+Authentication: Bearer token
+
+// Cart Management Endpoints
 GET /api/cart
-Response: { items: CartItem[], total: number }
+Response: CartItem[]
+Authentication: Bearer token
 
 POST /api/cart/items
 Request: { productId: string, quantity: number }
-Response: { item: CartItem, message: string }
-
-PUT /api/cart/items/:id
-Request: { quantity: number }
-Response: { item: CartItem, message: string }
-
-DELETE /api/cart/items/:id
-Response: { message: string, success: boolean }
-```
-
-#### File Upload
-```http
-POST /api/upload/logo
-Request: FormData with file
-Response: { url: string, message: string }
-
-POST /api/upload/product-image
-Request: FormData with file and productId
-Response: { url: string, message: string }
+Response: CartItem
+Authentication: Bearer token
 ```
 
 ### 4.2 API Patterns
-- **RESTful conventions** with proper HTTP methods
-- **JSON responses** with consistent error handling
-- **File upload** using multipart/form-data
-- **Pagination** for large datasets
-- **Filtering and sorting** query parameters
+- **RESTful Design**: Standard HTTP methods for CRUD operations
+- **JSON Communication**: All requests/responses in JSON format
+- **Error Handling**: Consistent error response format
+- **Pagination**: For large data sets (products, orders)
 
 ## 5. Security Design
 
 ### 5.1 Authentication Strategy
-- **JWT tokens** for stateless authentication
-- **Refresh token** mechanism for extended sessions
-- **Role-based access** (admin, manager, customer)
+- **JWT Token-based Authentication**
+- **Token Storage**: localStorage or sessionStorage
+- **Token Refresh**: Automatic token refresh mechanism
+- **Route Guards**: Angular guards for protected routes
 
-### 5.2 Authorization
 ```typescript
-// Auth guard example
 @Injectable()
-export class AdminGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
+  constructor(private auth: AuthService, private router: Router) {}
+  
   canActivate(): boolean {
-    return this.authService.hasRole('admin');
+    if (this.auth.isAuthenticated()) {
+      return true;
+    }
+    this.router.navigate(['/login']);
+    return false;
   }
 }
 ```
 
+### 5.2 Authorization
+- **Role-based Access Control (RBAC)**
+- **Component-level permissions**
+- **Route-level restrictions**
+
 ### 5.3 Data Protection
-- **HTTPS** for all communications
-- **Input validation** on both client and server
-- **File upload restrictions** (size, type, malware scanning)
-- **SQL injection prevention** using parameterized queries
+- **Input Validation**: Angular reactive forms with validators
+- **XSS Protection**: Angular's built-in sanitization
+- **CSRF Protection**: Angular's CSRF token handling
 
 ## 6. Integration Points
 
 ### 6.1 External Services
-- **Payment Gateway** (Stripe, PayPal) for checkout
-- **Email Service** (SendGrid, AWS SES) for notifications
-- **Cloud Storage** (AWS S3, Cloudinary) for image hosting
-- **Analytics** (Google Analytics) for user behavior tracking
+- **Payment Gateway**: Stripe/PayPal integration for e-commerce
+- **Image Storage**: Cloudinary or AWS S3 for product images
+- **Email Service**: SendGrid for notifications
+- **Analytics**: Google Analytics for user behavior tracking
 
 ### 6.2 Internal Integrations
-- **Component Communication** via Angular services and RxJS
-- **State Management** using Angular services with BehaviorSubject
-- **Route Guards** for navigation control
+- **Component Communication**: @Input/@Output decorators and services
+- **State Sharing**: Singleton services with BehaviorSubject
+- **Event Bus**: Angular services for cross-component communication
 
 ## 7. Performance Considerations
 
 ### 7.1 Optimization Strategies
-- **Lazy Loading** for route modules
-- **OnPush Change Detection** for better performance
-- **Image Optimization** with compression and CDN
-- **HTTP Caching** with appropriate cache headers
-- **Bundle Optimization** with tree shaking and code splitting
+- **Lazy Loading**: Route-based code splitting
+- **OnPush Change Detection**: For performance-critical components
+- **TrackBy Functions**: For efficient *ngFor rendering
+- **Image Optimization**: WebP format and lazy loading
+- **Caching**: HTTP interceptors for API response caching
+
+```typescript
+// Lazy loading example for routes
+const routes: Routes = [
+  {
+    path: 'manage-product',
+    loadComponent: () => import('./pages/manage-product-page/manage-product-page').then(m => m.ManageProductPage)
+  }
+];
+```
 
 ### 7.2 Scalability
-- **Component Reusability** for maintainable code
-- **Service Worker** for offline functionality
-- **Database Indexing** on frequently queried fields
-- **API Rate Limiting** to prevent abuse
+- **Modular Architecture**: Feature-based module organization
+- **Standalone Components**: Angular 17+ standalone component pattern
+- **Service Worker**: PWA capabilities for offline functionality
 
 ## 8. Error Handling and Logging
 
 ### 8.1 Error Handling Strategy
 ```typescript
-// Global error handler
 @Injectable()
-export class GlobalErrorHandler implements ErrorHandler {
-  handleError(error: Error): void {
-    console.error('Global error:', error);
-    // Send to logging service
-    this.loggingService.logError(error);
-    // Show user-friendly message
-    this.notificationService.showError('Something went wrong');
+export class ErrorInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Global error handling logic
+        this.notificationService.showError(error.message);
+        return throwError(() => error);
+      })
+    );
   }
 }
 ```
 
 ### 8.2 Logging and Monitoring
-- **Client-side logging** for user interactions and errors
-- **Server-side logging** for API requests and system events
-- **Performance monitoring** for load times and user experience
-- **Error tracking** with services like Sentry
+- **Console Logging**: Development environment
+- **Remote Logging**: Production environment (Sentry, LogRocket)
+- **User Action Tracking**: Analytics integration
 
 ## 9. Development Workflow
 
@@ -314,81 +324,95 @@ export class GlobalErrorHandler implements ErrorHandler {
 src/
 ├── app/
 │   ├── components/
-│   │   ├── cart/
-│   │   ├── product-management/
-│   │   └── navigation/
+│   │   └── card/
+│   ├── pages/
+│   │   ├── home-page/
+│   │   ├── personal-area-page/
+│   │   └── manage-product-page/
 │   ├── services/
-│   │   ├── cart.service.ts
-│   │   ├── product.service.ts
-│   │   └── auth.service.ts
 │   ├── models/
-│   │   ├── product.model.ts
-│   │   ├── cart-item.model.ts
-│   │   └── user.model.ts
 │   ├── guards/
 │   ├── interceptors/
-│   └── shared/
+│   └── app.routes.ts
 ├── assets/
-│   ├── images/
-│   │   └── logo.png  # Fixed location
-│   └── styles/
 └── environments/
 ```
 
 ### 9.2 Development Environment
-```bash
-# Environment variables
-ANGULAR_ENV=development
-API_BASE_URL=http://localhost:3000/api
-UPLOAD_MAX_SIZE=5MB
+```typescript
+// environment.ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/api',
+  enableLogging: true
+};
 ```
 
 ### 9.3 Testing Strategy
-- **Unit Tests** with Jasmine and Karma (>80% coverage)
-- **Integration Tests** for service interactions
-- **E2E Tests** with Cypress for critical user flows
-- **Component Testing** with Angular Testing Utilities
+- **Unit Testing**: Jasmine + Karma for component testing
+- **E2E Testing**: Cypress for end-to-end scenarios
+- **Service Testing**: Mock HTTP requests with HttpClientTestingModule
+- **Coverage Goal**: 80% code coverage minimum
 
 ## 10. Deployment Architecture
 
 ### 10.1 Deployment Strategy
-```yaml
-# CI/CD Pipeline (GitHub Actions example)
-name: Deploy Supermarket App
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Angular app
-        run: ng build --prod
-      - name: Deploy to hosting
-        run: # Deploy commands
-```
+- **Build Process**: `ng build --prod` for production builds
+- **CI/CD Pipeline**: GitHub Actions or Azure DevOps
+- **Environment Promotion**: Dev → Staging → Production
 
 ### 10.2 Infrastructure
 - **Frontend Hosting**: Vercel, Netlify, or AWS S3 + CloudFront
-- **Backend Hosting**: AWS EC2, Heroku, or DigitalOcean
-- **Database**: AWS RDS PostgreSQL or MongoDB Atlas
-- **File Storage**: AWS S3 or Cloudinary for images
-- **CDN**: CloudFront or Cloudflare for static assets
+- **Backend API**: Node.js/Express on AWS EC2 or Heroku
+- **Database**: PostgreSQL on AWS RDS or MongoDB Atlas
+- **CDN**: CloudFlare for static asset delivery
 
-## Immediate Fix for Logo Issue
+## Implementation Notes
 
-**Problem**: The logo.png is not loading because it's not in the correct Angular assets directory.
+### Immediate Task: Store Management Button
+```typescript
+// In home-page.component.ts
+import { Router } from '@angular/router';
 
-**Solution**:
-1. Move `logo.png` to `src/assets/images/logo.png`
-2. Update the HTML template:
-```html
-<img src="assets/images/logo.png" alt="logo" class="me-2">
+@Component({
+  selector: 'app-home-page',
+  standalone: true,
+  template: `
+    <div class="home-dashboard">
+      <h1>Panel de Control</h1>
+      <div class="quick-actions">
+        <button 
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="navigateToStoreManagement()">
+          <i class="fas fa-store"></i>
+          Gestión de Tienda
+        </button>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .quick-actions {
+      margin-top: 2rem;
+    }
+    
+    .btn-lg {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+    }
+    
+    .fas {
+      margin-right: 0.5rem;
+    }
+  `]
+})
+export class HomePageComponent {
+  constructor(private router: Router) {}
+  
+  navigateToStoreManagement(): void {
+    this.router.navigate(['/manage-product']);
+  }
+}
 ```
 
-**Alternative Solutions**:
-- Store logo URL in environment configuration
-- Implement dynamic logo loading from backend
-- Add fallback image handling for missing assets
-
-This comprehensive design provides a solid foundation for building a scalable supermarket management system with proper asset handling, component architecture, and modern development practices.
+This design specification provides a comprehensive blueprint for building a scalable Angular e-commerce application with proper routing, component architecture, and modern development practices.
