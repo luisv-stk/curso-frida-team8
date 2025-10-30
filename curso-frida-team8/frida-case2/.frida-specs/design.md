@@ -3,667 +3,803 @@
 ## 1. Architecture Overview
 
 ### 1.1 High-Level Architecture
-The system is built as a client-side Single Page Application (SPA) using Angular with a component-based architecture. The application follows a modular design pattern with reusable components for product management functionality.
+The system follows a **client-server architecture** with a modern Angular frontend communicating with a RESTful backend API for image analysis and product recognition. The architecture supports real-time image processing with AI/ML capabilities for automated product identification and categorization.
+
+```mermaid
+graph TB
+    Client[Angular Frontend] --> API[REST API Gateway]
+    API --> Auth[Authentication Service]
+    API --> ImageProc[Image Processing Service]
+    API --> ML[ML/AI Analysis Engine]
+    ImageProc --> Storage[File Storage]
+    ML --> ProductDB[(Product Database)]
+    API --> AppDB[(Application Database)]
+    Client --> CDN[CDN for Static Assets]
+```
 
 ### 1.2 Architecture Diagram
 ```
-┌─────────────────────────────────────────┐
-���              Frontend (Angular)          │
-├─────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────────┐   │
-│  │   Table     │  │   Search Bar    │   │
-│  │ Component   │  │   Component     │   │
-│  └─────────────┘  └─────────────────┘   │
-│  ┌─────────────┐  ┌─────────────────┐   │
-│  │   Edit      │  │    Delete       │   │
-│  │   Modal     │  │    Modal        │   │
-│  └─────────────┘  └─────────────────┘   │
-├─────────────────────────────────────────┤
-│           Service Layer                  │
-│  ┌─────────────┐  ┌─────────────────┐   │
-│  │  Product    │  │   Notification  │   │
-│  │  Service    │  │   Service       │   │
-│  └─────────────┘  └─────────────────┘   │
-├─────────────────────────────────────────┤
-│              HTTP Client                 │
-└─────────────────────────────────────────┘
-            │
-            ▼
-┌─────────────────────────────────────────┐
-│           Backend API                    │
-│      (REST/GraphQL Endpoints)           │
-└─────────────────────────────────────────┘
-            │
-            ▼
-┌─────────────────────────────────────────┐
-│            Database                      │
-│         (Product Data)                   │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                    Frontend Layer                           │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │   Angular   │  │  Components │  │    Services &       │ │
+│  │     App     │  │     UI      │  │   State Management  │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                         HTTP/HTTPS
+                              │
+┌──────────��─��────────────────────────────────────────────────┐
+│                    Backend Layer                            │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │   API       │  │   Image     │  │    ML/AI           │ │
+│  │  Gateway    │  │ Processing  │  │   Analysis         │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────���─���─────────────────────┐
+│                    Data Layer                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │  PostgreSQL │  │   Redis     │  │    File Storage     │ │
+│  │  Database   │  │   Cache     │  │   (AWS S3/Local)    │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### 1.3 Technology Stack
 
 **Frontend Technologies:**
-- Angular 15+
-- TypeScript
-- Bootstrap 5
-- Material Icons
+- Angular 17+ (with standalone components)
+- TypeScript 5+
 - RxJS for reactive programming
+- Angular Material or PrimeNG for UI components
+- TailwindCSS for styling
 
 **Backend Technologies:**
-- Node.js with Express.js / ASP.NET Core / Spring Boot
-- RESTful API architecture
+- Node.js with Express.js or NestJS
+- TypeScript
+- Multer for file upload handling
+- Sharp or ImageMagick for image processing
+- TensorFlow.js or Python-based ML service
 
 **Database Systems:**
-- PostgreSQL / MySQL / MongoDB (depending on requirements)
+- PostgreSQL (primary database)
+- Redis (caching and session storage)
 
-**Third-party Services:**
-- None currently required
+**Third-party Services and APIs:**
+- AWS S3 or Google Cloud Storage (file storage)
+- TensorFlow/PyTorch ML models
+- Stripe (payment processing)
+- SendGrid (email notifications)
 
 **Development Tools:**
-- Angular CLI
-- VS Code / WebStorm
-- npm/yarn package manager
+- Docker for containerization
+- Jest for testing
+- ESLint/Prettier for code quality
+- GitHub Actions for CI/CD
 
 ## 2. Component Design
 
 ### 2.1 Frontend Components
 
-#### Table Component (`table.component.ts`)
-**Responsibilities:**
-- Display product data in tabular format
-- Handle search filtering
-- Manage edit/delete operations
-- Pagination (future enhancement)
-
-**Key Properties:**
+**Core Components:**
 ```typescript
-export class TableComponent {
-  productos: Product[] = [];
-  totalProductos: number = 0;
-  currentFilter: FilterOptions = { searchText: '', category: 'Todos' };
-  isLoading: boolean = false;
-}
+// Main application components
+- AppComponent (root)
+- HeaderComponent (navigation, logo)
+- ImageUploaderComponent (file upload interface)
+- ImageAnalysisComponent (analysis results display)
+- PersonalAreaComponent (user dashboard)
+- ProductFormComponent (manual product entry)
+- LoadingSpinnerComponent (async operation feedback)
 ```
 
-**Key Methods:**
+**Service Layer:**
 ```typescript
-onSearchChanged(filter: FilterOptions): void
-editProduct(product: Product): void
-deleteProduct(productId: string): void
-confirmDelete(product: Product): void
-loadProducts(): void
+- ApiService (HTTP communication)
+- AuthService (authentication management)
+- FileService (file handling utilities)
+- StateService (application state management)
+- NotificationService (user feedback)
 ```
-
-#### Search Bar Component (`search-bar.component.ts`)
-**Responsibilities:**
-- Provide search input functionality
-- Emit search events to parent component
-- Handle category filtering
-
-#### Edit Product Modal Component (New)
-**Responsibilities:**
-- Display edit form for product
-- Validate form input
-- Submit updates to service
-
-#### Delete Confirmation Modal Component (New)
-**Responsibilities:**
-- Show confirmation dialog
-- Handle delete confirmation/cancellation
 
 ### 2.2 Backend Services
 
-#### Product Service (`product.service.ts`)
-**Responsibilities:**
-- HTTP operations for product CRUD
-- Data transformation and validation
-- Error handling
+**API Services:**
+- **Authentication Service**: JWT-based user authentication
+- **Image Upload Service**: File validation and storage
+- **Image Analysis Service**: ML/AI integration for product recognition
+- **Product Management Service**: CRUD operations for products
+- **User Management Service**: User profile and preferences
 
-```typescript
-@Injectable({ providedIn: 'root' })
-export class ProductService {
-  getProducts(filter?: FilterOptions): Observable<Product[]>
-  getProduct(id: string): Observable<Product>
-  updateProduct(id: string, product: Partial<Product>): Observable<Product>
-  deleteProduct(id: string): Observable<boolean>
-  createProduct(product: CreateProductRequest): Observable<Product>
-}
-```
-
-#### Notification Service (`notification.service.ts`)
-**Responsibilities:**
-- Display success/error messages
-- Toast notifications
-- User feedback management
+**Processing Services:**
+- **Image Processing Pipeline**: Resize, format conversion, optimization
+- **ML Inference Service**: Product categorization and attribute extraction
+- **Notification Service**: Email and push notifications
 
 ### 2.3 Database Layer
-Data access through HTTP client communicating with RESTful API endpoints.
+
+**Data Access Pattern:**
+- Repository pattern with TypeORM or Prisma
+- Connection pooling for performance
+- Read replicas for scalability
+- Redis for caching frequently accessed data
 
 ## 3. Data Models
 
 ### 3.1 Database Schema
 
-**Products Table:**
 ```sql
-CREATE TABLE products (
+-- Users Table
+CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  referencia VARCHAR(50) UNIQUE NOT NULL,
-  nombre VARCHAR(200) NOT NULL,
-  marca VARCHAR(100) NOT NULL,
-  descripcion TEXT,
-  precio DECIMAL(10,2) NOT NULL,
-  disponible INTEGER DEFAULT 0,
-  departamento VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  avatar_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_products_referencia ON products(referencia);
-CREATE INDEX idx_products_departamento ON products(departamento);
-CREATE INDEX idx_products_marca ON products(marca);
+-- Products Table
+CREATE TABLE products (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(100),
+  category VARCHAR(100),
+  weight DECIMAL(10,2),
+  price DECIMAL(10,2),
+  currency VARCHAR(3) DEFAULT 'USD',
+  description TEXT,
+  image_url VARCHAR(500),
+  analysis_confidence DECIMAL(3,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Image Analysis Table
+CREATE TABLE image_analyses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  original_filename VARCHAR(255),
+  file_path VARCHAR(500),
+  file_size INTEGER,
+  mime_type VARCHAR(100),
+  analysis_status VARCHAR(50) DEFAULT 'pending',
+  ml_predictions JSONB,
+  processing_time_ms INTEGER,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User Sessions Table
+CREATE TABLE user_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  token_hash VARCHAR(255) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-### 3.2 TypeScript Interfaces
+### 3.2 TypeScript Data Models
 
 ```typescript
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Product {
   id: string;
-  referencia: string;
-  nombre: string;
-  marca: string;
-  descripcion: string;
-  precio: number;
-  disponible: number;
-  departamento: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  userId: string;
+  name: string;
+  type?: string;
+  category?: string;
+  weight?: number;
+  price?: number;
+  currency: string;
+  description?: string;
+  imageUrl?: string;
+  analysisConfidence?: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface CreateProductRequest {
-  referencia: string;
-  nombre: string;
-  marca: string;
-  descripcion: string;
-  precio: number;
-  disponible: number;
-  departamento: string;
-}
-
-export interface UpdateProductRequest {
-  nombre?: string;
-  marca?: string;
-  descripcion?: string;
-  precio?: number;
-  disponible?: number;
-  departamento?: string;
-}
-
-export interface FilterOptions {
-  searchText: string;
+export interface ImageAnalysisResponse {
+  type: string;
+  weight: string;
+  price: string;
   category: string;
-  priceRange?: { min: number; max: number };
+  confidence?: number;
+  predictions?: MLPrediction[];
+}
+
+export interface MLPrediction {
+  label: string;
+  confidence: number;
+  boundingBox?: BoundingBox;
 }
 ```
 
 ### 3.3 Data Flow
-```
-User Action → Component → Service → HTTP Client → API → Database
-Database → API → HTTP Response → Service → Component → UI Update
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant A as API
+    participant ML as ML Service
+    participant DB as Database
+    participant S as Storage
+
+    U->>F: Upload Image
+    F->>A: POST /api/images/analyze
+    A->>S: Store Image File
+    A->>ML: Send Image for Analysis
+    ML->>A: Return Analysis Results
+    A->>DB: Save Product & Analysis
+    A->>F: Return ImageAnalysisResponse
+    F->>U: Display Results
 ```
 
 ## 4. API Design
 
 ### 4.1 Endpoints
 
-**Get Products**
+**Authentication Endpoints:**
+```
+POST /api/auth/register
+Request: { email: string, password: string, firstName?: string, lastName?: string }
+Response: { user: User, token: string }
+Authentication: None
+
+POST /api/auth/login
+Request: { email: string, password: string }
+Response: { user: User, token: string }
+Authentication: None
+
+POST /api/auth/logout
+Request: {}
+Response: { message: string }
+Authentication: Bearer Token
+```
+
+**Image Analysis Endpoints:**
+```
+POST /api/images/analyze
+Request: FormData with 'image' field (multipart/form-data)
+Response: ImageAnalysisResponse
+Authentication: Bearer Token (optional for demo)
+
+GET /api/images/analysis/:id
+Request: { id: string }
+Response: ImageAnalysisResponse with full details
+Authentication: Bearer Token
+```
+
+**Product Management Endpoints:**
 ```
 GET /api/products
-Query Parameters: 
-  - search: string (optional)
-  - category: string (optional)
-  - page: number (optional, default: 1)
-  - limit: number (optional, default: 50)
-Response: {
-  data: Product[],
-  total: number,
-  page: number,
-  totalPages: number
-}
+Query: { page?: number, limit?: number, category?: string }
+Response: { products: Product[], total: number, page: number }
 Authentication: Bearer Token
-```
 
-**Get Single Product**
-```
-GET /api/products/:id
-Response: Product
-Authentication: Bearer Token
-```
-
-**Update Product**
-```
-PUT /api/products/:id
-Request: UpdateProductRequest
-Response: Product
-Authentication: Bearer Token
-```
-
-**Delete Product**
-```
-DELETE /api/products/:id
-Response: { success: boolean, message: string }
-Authentication: Bearer Token
-```
-
-**Create Product**
-```
 POST /api/products
-Request: CreateProductRequest
+Request: Partial<Product>
 Response: Product
 Authentication: Bearer Token
+
+PUT /api/products/:id
+Request: Partial<Product>
+Response: Product
+Authentication: Bearer Token
+
+DELETE /api/products/:id
+Response: { message: string }
+Authentication: Bearer Token
+```
+
+**System Endpoints:**
+```
+GET /api/health
+Response: { status: 'healthy' | 'unhealthy', timestamp: string, version: string }
+Authentication: None
 ```
 
 ### 4.2 API Patterns
-- RESTful conventions with HTTP status codes
-- Consistent JSON response format
-- Error responses follow RFC 7807 Problem Details format
 
+**RESTful Conventions:**
+- GET for data retrieval
+- POST for creation
+- PUT for updates
+- DELETE for removal
+- Consistent URL patterns: `/api/resource` and `/api/resource/:id`
+
+**Error Response Format:**
 ```typescript
-interface ApiResponse<T> {
+interface ApiErrorResponse {
+  error: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+  timestamp: string;
+  path: string;
+}
+```
+
+**Success Response Format:**
+```typescript
+interface ApiSuccessResponse<T> {
   data: T;
   message?: string;
-  errors?: string[];
-}
-
-interface ApiError {
-  type: string;
-  title: string;
-  status: number;
-  detail: string;
-  instance?: string;
+  meta?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+  };
 }
 ```
 
 ## 5. Security Design
 
 ### 5.1 Authentication Strategy
-- JWT Bearer Token authentication
-- Token stored in httpOnly cookies or localStorage
-- Token refresh mechanism
+
+**JWT-based Authentication:**
+- Access tokens with 1-hour expiration
+- Refresh tokens with 7-day expiration
+- Secure HTTP-only cookies for token storage
+- CSRF protection for cookie-based auth
+
+```typescript
+interface JWTPayload {
+  sub: string; // user ID
+  email: string;
+  iat: number;
+  exp: number;
+  type: 'access' | 'refresh';
+}
+```
 
 ### 5.2 Authorization
-- Role-based access control (RBAC)
-- Permissions: `products:read`, `products:write`, `products:delete`
-- Route guards for protected pages
+
+**Role-Based Access Control:**
+```typescript
+enum UserRole {
+  USER = 'user',
+  ADMIN = 'admin',
+  MODERATOR = 'moderator'
+}
+
+interface Permission {
+  resource: string;
+  action: 'create' | 'read' | 'update' | 'delete';
+  condition?: string;
+}
+```
+
+**Resource-Level Permissions:**
+- Users can only access their own products
+- Admins can access all resources
+- Public endpoints for health checks and image analysis demo
 
 ### 5.3 Data Protection
-- Input validation and sanitization
-- XSS protection through Angular's built-in sanitization
-- CSRF protection for state-changing operations
-- SQL injection prevention through parameterized queries
+
+**Security Measures:**
+- bcrypt for password hashing (rounds: 12)
+- Rate limiting: 100 requests per 15 minutes per IP
+- Input validation using Joi or class-validator
+- SQL injection prevention via parameterized queries
+- XSS protection with Content Security Policy
+- HTTPS enforcement in production
+- File upload restrictions (size, type, virus scanning)
+
+```typescript
+const fileValidation = {
+  maxSize: 10 * 1024 * 1024, // 10MB
+  allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+  maxDimensions: { width: 4096, height: 4096 }
+};
+```
 
 ## 6. Integration Points
 
 ### 6.1 External Services
-Currently none required, but provision for:
-- Email notifications for critical operations
-- File upload service for product images
-- Analytics service for usage tracking
+
+**File Storage Integration:**
+```typescript
+interface StorageService {
+  uploadFile(file: Buffer, key: string): Promise<string>;
+  deleteFile(key: string): Promise<void>;
+  getSignedUrl(key: string, expiresIn: number): Promise<string>;
+}
+```
+
+**ML/AI Service Integration:**
+```typescript
+interface MLService {
+  analyzeImage(imageBuffer: Buffer): Promise<MLPrediction[]>;
+  getModelVersion(): Promise<string>;
+  healthCheck(): Promise<boolean>;
+}
+```
+
+**Email Service Integration:**
+```typescript
+interface EmailService {
+  sendWelcomeEmail(user: User): Promise<void>;
+  sendPasswordReset(email: string, token: string): Promise<void>;
+  sendAnalysisComplete(user: User, analysis: ImageAnalysisResponse): Promise<void>;
+}
+```
 
 ### 6.2 Internal Integrations
-- Components communicate through services and event emitters
-- Shared state management through RxJS subjects
-- Notification system integration across all CRUD operations
+
+**Service Communication:**
+- HTTP REST for synchronous operations
+- Event-driven architecture for async operations
+- Redis pub/sub for real-time notifications
+- Message queues for image processing pipeline
 
 ## 7. Performance Considerations
 
 ### 7.1 Optimization Strategies
-- **Caching**: HTTP interceptor for API response caching
-- **Virtual scrolling**: For large product lists (Angular CDK)
-- **OnPush change detection**: For performance optimization
-- **Lazy loading**: Route-level code splitting
-- **Debouncing**: Search input with 300ms delay
+
+**Caching Strategy:**
+```typescript
+// Redis cache configuration
+const cacheConfig = {
+  userSessions: { ttl: 3600 }, // 1 hour
+  analysisResults: { ttl: 86400 }, // 24 hours
+  productLists: { ttl: 300 }, // 5 minutes
+  staticContent: { ttl: 604800 } // 1 week
+};
+```
+
+**Database Optimization:**
+```sql
+-- Essential indexes
+CREATE INDEX idx_products_user_id ON products(user_id);
+CREATE INDEX idx_products_category ON products(category);
+CREATE INDEX idx_products_created_at ON products(created_at DESC);
+CREATE INDEX idx_image_analyses_product_id ON image_analyses(product_id);
+CREATE INDEX idx_user_sessions_token_hash ON user_sessions(token_hash);
+```
+
+**Frontend Optimization:**
+- Lazy loading for route modules
+- OnPush change detection strategy
+- Virtual scrolling for large lists
+- Image compression and WebP format
+- Service worker for offline capabilities
 
 ### 7.2 Scalability
-- Component-based architecture for reusability
-- Service abstraction for easy backend switching
-- Paginated API responses
-- Client-side filtering for small datasets, server-side for large ones
+
+**Horizontal Scaling:**
+- Stateless API design
+- Load balancer (Nginx/HAProxy)
+- Database read replicas
+- CDN for static assets
+- Container orchestration (Kubernetes)
+
+**Performance Targets:**
+- API response time: < 500ms (95th percentile)
+- Image analysis: < 30 seconds
+- Database queries: < 100ms
+- Frontend load time: < 3 seconds
 
 ## 8. Error Handling and Logging
 
 ### 8.1 Error Handling Strategy
+
+**Frontend Error Handling:**
 ```typescript
-// Global error handler
-@Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: any): void {
     console.error('Global error:', error);
-    // Send to logging service
-    // Show user-friendly message
+    
+    if (error instanceof HttpErrorResponse) {
+      this.handleHttpError(error);
+    } else {
+      this.handleClientError(error);
+    }
   }
-}
-
-// HTTP error interceptor  
-@Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
-      catchError((error: HttpErrorResponse) => {
-        // Handle different error types
-        return throwError(error);
-      })
-    );
+  
+  private handleHttpError(error: HttpErrorResponse): void {
+    switch (error.status) {
+      case 401:
+        this.authService.logout();
+        break;
+      case 413:
+        this.notificationService.showError('File too large');
+        break;
+      default:
+        this.notificationService.showError('An error occurred');
+    }
   }
 }
 ```
 
+**Backend Error Handling:**
+```typescript
+export class AppError extends Error {
+  constructor(
+    public message: string,
+    public statusCode: number,
+    public code: string,
+    public isOperational: boolean = true
+  ) {
+    super(message);
+    Object.setPrototypeOf(this, AppError.prototype);
+  }
+}
+
+// Error codes
+export const ErrorCodes = {
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  IMAGE_PROCESSING_FAILED: 'IMAGE_PROCESSING_FAILED',
+  ML_SERVICE_UNAVAILABLE: 'ML_SERVICE_UNAVAILABLE',
+  FILE_TOO_LARGE: 'FILE_TOO_LARGE',
+  UNSUPPORTED_FILE_TYPE: 'UNSUPPORTED_FILE_TYPE'
+} as const;
+```
+
 ### 8.2 Logging and Monitoring
-- Console logging in development
-- Structured logging to external service in production
-- User action tracking
-- Performance metrics collection
+
+**Structured Logging:**
+```typescript
+interface LogEntry {
+  timestamp: string;
+  level: 'debug' | 'info' | 'warn' | 'error';
+  message: string;
+  userId?: string;
+  requestId?: string;
+  metadata?: Record<string, any>;
+}
+```
+
+**Monitoring Metrics:**
+- Request/response times
+- Error rates by endpoint
+- Image processing success/failure rates
+- Database connection pool status
+- Memory and CPU usage
+- File upload metrics
 
 ## 9. Development Workflow
 
 ### 9.1 Project Structure
+
 ```
 src/
 ├── app/
 │   ├── components/
-│   │   ├── table/
-│   │   ├── search-bar/
-│   │   ├── edit-product-modal/
-│   │   └── delete-confirmation-modal/
+│   │   ├── image-uploader/
+│   │   ├── image-analysis/
+│   │   └── personal-area/
 │   ├── services/
-│   │   ├── product.service.ts
-│   │   └── notification.service.ts
+│   │   ├── api.service.ts
+│   │   ├── auth.service.ts
+│   │   └── file.service.ts
 │   ├── models/
+│   │   ├── user.model.ts
 │   │   └── product.model.ts
 │   ├── guards/
+│   │   └── auth.guard.ts
 │   ├── interceptors/
+│   │   └── auth.interceptor.ts
 │   └── shared/
+│       ├── components/
+│       └── pipes/
 ├── assets/
-├── environments/
-└── styles/
+│   ├── images/
+│   │   └── logo.png (increased size)
+│   └── styles/
+└── environments/
 ```
 
 ### 9.2 Development Environment
+
 **Environment Variables:**
 ```typescript
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
-  logLevel: 'debug'
+  mlServiceUrl: 'http://localhost:5000',
+  fileUploadMaxSize: 10 * 1024 * 1024,
+  jwtSecret: process.env['JWT_SECRET'],
+  databaseUrl: process.env['DATABASE_URL'],
+  redisUrl: process.env['REDIS_URL'],
+  awsAccessKey: process.env['AWS_ACCESS_KEY'],
+  awsSecretKey: process.env['AWS_SECRET_KEY']
 };
 ```
 
+**Local Setup Requirements:**
+- Node.js 18+
+- Angular CLI 17+
+- PostgreSQL 14+
+- Redis 6+
+- Docker and Docker Compose
+
 ### 9.3 Testing Strategy
-- **Unit Tests**: Jasmine + Karma (>80% coverage)
-- **Component Tests**: Angular Testing Utilities
-- **Integration Tests**: HTTP client testing with HttpClientTestingModule
-- **E2E Tests**: Cypress for critical user flows
+
+**Testing Pyramid:**
+```typescript
+// Unit Tests (70%)
+describe('ApiService', () => {
+  let service: ApiService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ApiService]
+    });
+    service = TestBed.inject(ApiService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  it('should analyze image successfully', () => {
+    const mockFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
+    const mockResponse: ImageAnalysisResponse = {
+      type: 'Electronics',
+      weight: '1.2kg',
+      price: '$299',
+      category: 'Smartphone'
+    };
+
+    service.analyzeImage(mockFile).subscribe(response => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('/api/images/analyze');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockResponse);
+  });
+});
+```
+
+**Integration Tests (20%):**
+- API endpoint testing
+- Database integration tests
+- File upload/processing tests
+
+**E2E Tests (10%):**
+- Critical user journeys
+- Image upload and analysis flow
+- Authentication flows
+
+**Test Coverage Goals:**
+- Unit tests: > 80%
+- Integration tests: > 60%
+- E2E tests: Cover critical paths
 
 ## 10. Deployment Architecture
 
 ### 10.1 Deployment Strategy
-- **Development**: Local development server (`ng serve`)
-- **Staging**: Docker container with nginx
-- **Production**: CDN deployment (AWS CloudFront, Vercel, Netlify)
+
+**CI/CD Pipeline:**
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy Application
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Tests
+        run: |
+          npm ci
+          npm run test:ci
+          npm run lint
+          
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Docker Images
+        run: |
+          docker build -t app:${{ github.sha }} .
+          docker push registry/app:${{ github.sha }}
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Production
+        run: |
+          kubectl set image deployment/app app=registry/app:${{ github.sha }}
+```
+
+**Environment Strategy:**
+- **Development**: Local development with hot reload
+- **Staging**: Production-like environment for testing
+- **Production**: Live environment with monitoring
 
 ### 10.2 Infrastructure
-- **Frontend Hosting**: Static file hosting on CDN
-- **Backend API**: Container-based deployment
-- **Database**: Managed database service (AWS RDS, Azure SQL)
-- **CI/CD**: GitHub Actions or Azure DevOps
 
-## Enhanced Table Component Implementation
+**Containerization:**
+```dockerfile
+# Frontend Dockerfile
+FROM node:18-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-### Updated Template (`table.component.html`)
-```html
-<div class="container-fluid min-vh-100">
-  <div class="row">
-    <div class="col-12 pt-3">
-      <h4>Productos en tienda</h4>
-      <span class="px-2 py-1 rounded bg-light text-muted">
-        {{ totalProductos }} productos 
-        {{ currentFilter.searchText || currentFilter.category !== 'Todos' ? 'encontrados' : 'cargados' }}
-      </span>
-      <div class="float-end">
-        <app-search-bar (searchChanged)="onSearchChanged($event)"></app-search-bar>
-      </div>
-    </div>
-    <div class="col-12 mt-3">
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>Referencia</th>
-              <th>Nombre</th>
-              <th>Marca</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <th>N° Disp</th>
-              <th>Departamento</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let producto of productos; trackBy: trackByProductId">
-              <td>{{ producto.referencia }}</td>
-              <td>{{ producto.nombre }}</td>
-              <td>{{ producto.marca }}</td>
-              <td>{{ producto.descripcion }}</td>
-              <td>{{ producto.precio | currency:'COP':'symbol':'1.0-0' }}</td>
-              <td>
-                <span [class]="getStockClass(producto.disponible)">
-                  {{ producto.disponible }}
-                </span>
-              </td>
-              <td>{{ producto.departamento }}</td>
-              <td class="text-center">
-                <button 
-                  class="btn btn-sm btn-outline-primary me-2"
-                  (click)="editProduct(producto)"
-                  [disabled]="isLoading"
-                  title="Editar producto">
-                  <i class="material-icons">edit</i>
-                </button>
-                <button 
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="confirmDelete(producto)"
-                  [disabled]="isLoading"
-                  title="Eliminar producto">
-                  <i class="material-icons">delete</i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <!-- Loading state -->
-      <div *ngIf="isLoading" class="text-center py-4">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
-      </div>
-      
-      <!-- Empty state -->
-      <div *ngIf="!isLoading && productos.length === 0" class="text-center py-5">
-        <i class="material-icons text-muted" style="font-size: 48px;">inventory_2</i>
-        <p class="text-muted mt-2">No se encontraron productos</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Product Modal -->
-<app-edit-product-modal 
-  [product]="selectedProduct"
-  [isVisible]="showEditModal"
-  (save)="onProductSaved($event)"
-  (cancel)="onEditCancel()">
-</app-edit-product-modal>
-
-<!-- Delete Confirmation Modal -->
-<app-delete-confirmation-modal
-  [item]="productToDelete"
-  [isVisible]="showDeleteModal"
-  (confirm)="onDeleteConfirm()"
-  (cancel)="onDeleteCancel()">
-</app-delete-confirmation-modal>
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
 ```
 
-### Component Logic (`table.component.ts`)
-```typescript
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+**Docker Compose for Development:**
+```yaml
+version: '3.8'
+services:
+  frontend:
+    build: .
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/appdb
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+      
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
 
-import { Product, FilterOptions } from '../../models/product.model';
-import { ProductService } from '../../services/product.service';
-import { NotificationService } from '../../services/notification.service';
-
-@Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
-})
-export class TableComponent implements OnInit, OnDestroy {
-  productos: Product[] = [];
-  totalProductos: number = 0;
-  currentFilter: FilterOptions = { searchText: '', category: 'Todos' };
-  isLoading: boolean = false;
-  
-  // Modal states
-  showEditModal: boolean = false;
-  showDeleteModal: boolean = false;
-  selectedProduct: Product | null = null;
-  productToDelete: Product | null = null;
-  
-  private destroy$ = new Subject<void>();
-
-  constructor(
-    private productService: ProductService,
-    private notificationService: NotificationService
-  ) {}
-
-  ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  loadProducts(): void {
-    this.isLoading = true;
-    
-    this.productService.getProducts(this.currentFilter)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.productos = response.data;
-          this.totalProductos = response.total;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.notificationService.showError('Error al cargar productos');
-          this.isLoading = false;
-          console.error('Error loading products:', error);
-        }
-      });
-  }
-
-  onSearchChanged(filter: FilterOptions): void {
-    this.currentFilter = filter;
-    this.loadProducts();
-  }
-
-  editProduct(product: Product): void {
-    this.selectedProduct = { ...product }; // Create a copy
-    this.showEditModal = true;
-  }
-
-  confirmDelete(product: Product): void {
-    this.productToDelete = product;
-    this.showDeleteModal = true;
-  }
-
-  onProductSaved(updatedProduct: Product): void {
-    this.isLoading = true;
-    
-    this.productService.updateProduct(updatedProduct.id, updatedProduct)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (product) => {
-          // Update local array
-          const index = this.productos.findIndex(p => p.id === product.id);
-          if (index !== -1) {
-            this.productos[index] = product;
-          }
-          
-          this.notificationService.showSuccess('Producto actualizado correctamente');
-          this.showEditModal = false;
-          this.selectedProduct = null;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.notificationService.showError('Error al actualizar producto');
-          this.isLoading = false;
-          console.error('Error updating product:', error);
-        }
-      });
-  }
-
-  onEditCancel(): void {
-    this.showEditModal = false;
-    this.selectedProduct = null;
-  }
-
-  onDeleteConfirm(): void {
-    if (!this.productToDelete) return;
-    
-    this.isLoading = true;
-    
-    this.productService.deleteProduct(this.productToDelete.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          // Remove from local array
-          this.productos = this.productos.filter(p => p.id !== this.productToDelete?.id);
-          this.totalProductos--;
-          
-          this.notificationService.showSuccess('Producto eliminado correctamente');
-          this.showDeleteModal = false;
-          this.productToDelete = null;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.notificationService.showError('Error al eliminar producto');
-          this.isLoading = false;
-          console.error('Error deleting product:', error);
-        }
-      });
-  }
-
-  onDeleteCancel(): void {
-    this.showDeleteModal = false;
-    this.productToDelete = null;
-  }
-
-  trackByProductId(index: number, product: Product): string {
-    return product.id;
-  }
-
-  getStockClass(stock: number): string {
-    if (stock === 0) return 'badge bg-danger';
-    if (stock <= 5) return 'badge bg-warning text-dark';
-    return 'badge bg-success';
-  }
-}
+volumes:
+  postgres_data:
 ```
 
-This comprehensive design provides a solid foundation for implementing the edit and delete functionality with proper error handling, user feedback, and maintainable code architecture.
+**Production Infrastructure:**
+- **Hosting**: AWS ECS or Google Cloud Run
+- **Database**: AWS RDS PostgreSQL with read replicas
+- **Cache**: AWS ElastiCache Redis
+- **Storage**: AWS S3 with CloudFront CDN
+- **Load Balancer**: AWS Application Load Balancer
+- **Monitoring**: AWS CloudWatch + DataDog
+- **SSL**: AWS Certificate Manager
+
+**Scaling Configuration:**
+- Auto-scaling based on CPU/memory usage
+- Database connection pooling
+- Redis cluster for high availability
+- Multi-region deployment for global users
+
+This comprehensive design specification provides a robust foundation for building a scalable image analysis application with modern technologies and best practices. The architecture supports the current requirements while allowing for future enhancements and scaling needs.

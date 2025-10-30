@@ -4,7 +4,8 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { ApiService, ImageAnalysisResponse } from './api.service';
+import { ApiService } from './api.service';
+import { ImageAnalysisResponse } from './api.types';
 
 /**
  * Example component showing how to use the ApiService
@@ -25,10 +26,10 @@ import { ApiService, ImageAnalysisResponse } from './api.service';
       
       <div *ngIf="analysisResult" class="results">
         <h3>Analysis Results:</h3>
-        <p><strong>Type:</strong> {{ analysisResult.type }}</p>
-        <p><strong>Weight:</strong> {{ analysisResult.weight }}</p>
-        <p><strong>Price:</strong> {{ analysisResult.price }}</p>
-        <p><strong>Category:</strong> {{ analysisResult.category }}</p>
+        <p><strong>Type:</strong> {{ analysisResult?.type }}</p>
+        <p><strong>Weight:</strong> {{ analysisResult?.weight }}</p>
+        <p><strong>Price:</strong> {{ analysisResult?.price }}</p>
+        <p><strong>Category:</strong> {{ analysisResult?.category }}</p>
       </div>
       
       <div *ngIf="errorMessage" class="error">

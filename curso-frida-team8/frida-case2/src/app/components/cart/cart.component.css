@@ -1,6 +1,7 @@
 .navbar {
   background-color: #f1f1ee;
-  padding: 15px 30px;
+  padding: 20px 30px;
+  min-height: 120px;
 }
 
 .nav-items span {
@@ -16,4 +17,10 @@
   border-radius: 4px;
   display: flex;
   align-items: center;
+}
+
+.logo-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }
