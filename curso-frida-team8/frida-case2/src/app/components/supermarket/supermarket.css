@@ -1,0 +1,88 @@
+:root {
+  --primary-color: #5daa4c;
+  --accent-color: #0179ff;
+  --background-color: #f3f3f3;
+  --text-color: #1e1e1e;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  padding: 10px;
+}
+
+.header .top-bar {
+  display: flex;
+  align-items: center;
+}
+
+.fill-space {
+  flex: 1;
+}
+
+nav {
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+.content-container {
+  display: block;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 128px);
+  overflow: hidden; 
+}
+
+.sidebar {
+
+  width: 220px;
+  min-width: 200px;
+  background-color: var(--background-color);
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+}
+
+.main-content {
+  background-color: #ffffff;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;   
+  overflow-x: hidden;  
+  padding: 1rem;
+  min-width: 0;       
+}
+
+.product-grid {
+   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.product-card {
+  border: 1px solid var(--background-color);
+  transition: box-shadow 0.3s ease;
+  
+}
+
+.product-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.cart-button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}

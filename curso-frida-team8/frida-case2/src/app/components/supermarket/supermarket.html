@@ -1,0 +1,78 @@
+<div class="header">
+  <mat-toolbar color="primary" class="top-bar">
+    <span>Hola, Francisco Perera</span>
+    <span class="fill-space"></span>
+    <span>Español</span>
+    <button mat-icon-button>
+      <mat-icon>help_outline</mat-icon>
+    </button>
+    <button mat-button>Cerrar sesión</button>
+    <button mat-raised-button color="accent">Gestión de tienda</button>
+  </mat-toolbar>
+</div>
+
+<div class="content-container">
+  
+
+<div  class="d-flex">
+    <mat-toolbar class="nav">
+    <button mat-button>ALIMENTACIÓN</button>
+    <button mat-button>PLATOS PREPARADOS</button>
+    <button mat-button>FERRETERÍA</button>
+    <button mat-button>JARDINERÍA</button>
+  </mat-toolbar>
+
+<div class="content-wrapper">
+       <div class="sidebar">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>CONSERVAS</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <mat-list-item>Pescado</mat-list-item>
+        <mat-list-item>Verduras</mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+    <mat-list>
+      <mat-list-item>LÁCTEOS</mat-list-item>
+      <mat-list-item>FRUTAS Y VERDURAS</mat-list-item>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>PESCADERÍA</mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>CARNICERÍA</mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-list>
+  </div>
+  <div class="main-content">
+    <h2>Conservas de pescado</h2>
+    <div class="product-grid">
+      <mat-card *ngFor="let product of products" class="product-card">
+        <img mat-card-image src="https://placehold.co/400x400/jpg" alt="Product image">
+        <mat-card-content>
+          <h3>{{product.price}}</h3>
+          <p>{{product.title}}</p>
+          <p>Cantidad</p>
+          <p>{{product.description}}</p>
+          <div class="quantity-controls">
+            <button mat-mini-fab (click)="decrement(product)">-</button>
+            <span>{{product.quantity}}</span>
+            <button mat-mini-fab (click)="increment(product)">+</button>
+          </div>
+          <button mat-raised-button color="primary" class="cart-button">Añadir al carro</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+  
+
+
+</div>
+ 
+</div>

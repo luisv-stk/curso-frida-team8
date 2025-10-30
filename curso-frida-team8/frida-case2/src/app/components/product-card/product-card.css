@@ -1,0 +1,30 @@
+.products-container {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  justify-content: center;
+}
+
+.product-card {
+  width: 250px;
+  padding-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.quantity-control button {
+  width: 24px;
+  height: 24px;
+}
+
+.add-to-cart-button {
+  width: 100%;
+  background-color: #5daa4c;
+  color: #ffffff;
+}
